@@ -1,0 +1,43 @@
+<h1> Portfolio page </h1>
+<hr>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            <th class="sector">Sector<br></th>
+            <th class="text-right">Quantity<br></th>
+            <th class="text-right">Last price<br></th>
+            <th class="text-right">Avg. price<br></th>
+            <th class="text-right">Market<br>value<br></th>
+            <th class="text-right ploss">Profit<br>Loss<br></th>
+            <th class="text-right">Portfolio<br></th>
+            <th class="text-right"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let entry of entries">
+            <tr>
+                <td class="sector-item"><strong> {{ entry.ticker }}</strong> {{ " • " + entry.name }} </td>
+                <td> {{ entry.sector }} </td>
+                <td> {{ entry.quantity }} </td>
+                <td> {{ entry.lastPrice | currency }}</td>
+                <td> {{ entry.avgPrice | currency }}</td>
+                <td> {{ entry.marketValue | currency }}</td>
+                <td [ngClass]="{'text-danger': entry.profit! < 0,
+            'text-success': entry.profit! > 0.10}"> {{ entry?.profit | percent }}</td>
+                <td> {{ entry.portfolio | percent }}</td>
+            </tr>
+        </ng-container>
+        <tr>
+            <td></td>
+            <td></td>
+            <td class="sector-item"><strong> Total:</strong></td>
+            <td> {{ totals.total | currency }}</td>
+            <td> {{ totals.initial | currency }} </td>
+            <td> {{ totals.total - totals.initial| currency }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
