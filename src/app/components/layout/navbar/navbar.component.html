@@ -1,0 +1,18 @@
+<header class="header">
+    <nav>
+        <div class="logo">
+            <a href='/'>
+                <div class="image_wrapper pop_up">
+                    <img src='assets/images/hello-suki.jpeg' width="64" height="64"/>
+                </div>
+            </a>
+        </div>
+        <ul>
+            <ng-container *ngFor="let topic of TOPICS">
+                <li>
+                    <a [href]="topic.route"> {{topic.title}} </a>
+                </li>
+            </ng-container>
+        </ul>
+    </nav>
+</header>

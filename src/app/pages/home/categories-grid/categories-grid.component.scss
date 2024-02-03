@@ -1,0 +1,55 @@
+.grid {
+    margin: 20px 20px;
+    height: 100%;
+    padding: 0;
+    align-items: baseline;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.item {
+    width: 30%;
+    min-width: 150px;
+    max-width: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 10px;
+    padding: 10px 0px 10px 0px;
+}
+
+.item a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer; 
+}
+
+.pop_up {
+    transition-duration: 250ms; 
+  }
+  
+.pop_up:hover,
+.pop_up:active {
+    cursor: pointer;
+    translate: -2px -2px;
+}
+
+.image {
+    width: 75%;
+    height: 75%;
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--color-grey-700);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+    margin: auto;
+}
+
+.text { 
+    text-align: center;
+    padding: 10px;
+}
