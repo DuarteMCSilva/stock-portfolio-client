@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -9,10 +12,9 @@ import { HeroComponent } from './pages/home/hero/hero.component';
 import { CategoriesGridComponent } from './pages/home/categories-grid/categories-grid.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { NavbarComponent } from './components/layout/navbar/navbar.component';
-import { RouterModule, Routes } from '@angular/router';
 import { PortfolioComponent } from './pages/portfolio/portfolio.component';
 import { CalculatorComponent } from './pages/portfolio/calculator/calculator.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { HistoryComponent } from './pages/portfolio/history/history.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -29,13 +31,15 @@ const routes: Routes = [
     LayoutComponent,
     NavbarComponent,
     PortfolioComponent,
-    CalculatorComponent
+    CalculatorComponent,
+    HistoryComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatTableModule,
     ReactiveFormsModule,
+    HttpClientModule,
     RouterModule.forRoot(routes),
   ],
   providers: [],

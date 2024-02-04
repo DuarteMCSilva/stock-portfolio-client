@@ -1,0 +1,19 @@
+[
+    {
+        "date": "2024-02-04T18:49:43.198Z",
+        "ticker": "META",
+        "intrinsicValue": 146.23,
+        "financials": {
+            "revenue": 307000,
+            "fcf": 69500,
+            "debt": 28500
+        },
+        "assumptions": {
+            "growth5": 15,
+            "growth10": 10,
+            "growth20": 4,
+            "discount": 7
+        },
+        "comment": ""
+    }
+]

@@ -66,3 +66,40 @@ button {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.table {
+  margin: 20px auto;
+  width: 950px;
+  background-color: var(--color-grey-300);
+  border-radius: 10px;
+}
+thead {
+  border-bottom: solid black 1px;
+}
+
+tbody{
+  text-align: center;
+
+  .sector-item {
+      text-align: left;
+  }
+}
+
+th {
+  line-height: 1.2;
+  &.sector {
+    width: 70px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+tr {
+  text-align: center;
+  height: 40px;
+}
+
+td {
+  padding: 0 10px;
+}

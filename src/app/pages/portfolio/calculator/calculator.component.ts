@@ -12,6 +12,7 @@ export class CalculatorComponent implements OnInit {
 
   formGroup: FormGroup;
 
+  intrinsicValue: number = 0;
   intrinsicValue$: Observable<number>;
   intrinsicValueSubject: BehaviorSubject<number>;
 
@@ -69,6 +70,7 @@ export class CalculatorComponent implements OnInit {
 
     const IV = this.calculateDFCF(this.totalProjCashFlow, formValues.debt, this.numShares);
     this.intrinsicValueSubject.next(IV);
+    this.intrinsicValue = IV;
     return IV;
   }
 
@@ -96,4 +98,62 @@ export class CalculatorComponent implements OnInit {
       }
     )
   }
+
+  saveSimulation() {
+    const formValues = this.formGroup.value;
+
+    const date = new Date();
+    const dateToSave = date.toLocaleString('en-GB',{ day: '2-digit', month: 'short', year: '2-digit'});
+    
+    const simul: Simulation = {
+      date: dateToSave,
+      ticker: formValues.ticker,
+      intrinsicValue: this.intrinsicValue,
+      financials: {
+        revenue: formValues.revenue,
+        fcf: formValues.fcf,
+        debt: formValues.debt
+      },
+      assumptions: {
+        growth5: formValues.growth5,
+        growth10: formValues.growth10,
+        growth20: formValues.growth20,
+        discount: formValues.discount
+      },
+      comment: formValues.commentary
+    }
+    const simulation = JSON.stringify(simul);
+    console.log(simulation)
+    return simulation;
+  }
+
+}
+
+export interface Simulation {
+  date: string,
+  ticker: string,
+  intrinsicValue: number,
+  financials: Financials,
+  assumptions: Assumptions,
+  projections?: Projections,
+  comment?: string
+}
+
+interface Projections {
+  revenue: number[],
+  fcf: number[],
+  dfcf: number[]
+}
+
+interface Assumptions {
+  growth5: number,
+  growth10: number,
+  growth20: number,
+  discount: number
+}
+
+interface Financials {
+  revenue: number,
+  fcf: number,
+  debt: number
 }

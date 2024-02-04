@@ -1,0 +1,33 @@
+<h1> History: </h1>
+<hr>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            <th class="sector">Date<br></th>
+            <th class="text-right">Ticker<br></th>
+            <th class="text-right">Intrinsic<br>Value<br></th>
+            <th class="text-right">Revenue<br></th>
+            <th class="text-right">FCF<br></th>
+            <th class="text-right">Debt<br></th>
+            <th class="text-right">Growth<br></th>
+            <th class="text-right">Discount<br> Rate <br></th>
+            <th class="text-right"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let entry of evaluations">
+            <tr>
+                <td> {{ entry.date }} </td>
+                <td class="sector-item"><strong> {{ entry.ticker }}</strong></td>
+                <td> {{ entry.intrinsicValue | currency }} </td>
+                <td> {{ entry.financials.revenue | currency }} </td>
+                <td> {{ entry.financials.fcf | currency }} </td>
+                <td> {{ entry.financials.debt | currency }}</td>
+                <td> {{ entry.assumptions.growth5 + '|' + entry.assumptions.growth10 + '|' + entry.assumptions.growth20 + '|' }}</td>
+                <td> {{ entry.assumptions.discount/100 | percent }}</td>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>
