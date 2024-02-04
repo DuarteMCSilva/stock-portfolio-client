@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { EvaluationsApiService } from 'src/app/services/evaluations-api.service';
 
 @Component({
   selector: 'app-calculator',
@@ -15,8 +16,14 @@ export class CalculatorComponent implements OnInit {
   intrinsicValueSubject: BehaviorSubject<number>;
 
   propagatedRevenue: number[] = [];
+  propagatedFCF: number[] = [];
+  propagatedDFCF: number[] = [];
+  numShares = 1;
+  totalProjCashFlow = 0;
 
-  constructor() {
+  constructor(private evaluationsApi: EvaluationsApiService) {
+    this.evaluationsApi.postEvaluation().subscribe( (d) => console.log(d));
+    this.evaluationsApi.getEvaluations().subscribe( (d) => console.log(d));
     this.intrinsicValueSubject = new BehaviorSubject<number>(0);
     this.intrinsicValue$ = this.intrinsicValueSubject.asObservable();
     this.formGroup = new FormGroup(
@@ -30,6 +37,7 @@ export class CalculatorComponent implements OnInit {
         growth10: new FormControl(10, Validators.required),
         growth20: new FormControl(4, Validators.required),
         discount: new FormControl(7, Validators.required),
+        commentary: new FormControl(''),
       }
     )
   }
@@ -45,18 +53,27 @@ export class CalculatorComponent implements OnInit {
   computeIntrinsicValue(formValues: any) {
     const FCFtoRevenueRatio = formValues.fcf / formValues.revenue;
 
-    const shares = formValues.shares;
+    this.numShares = formValues.shares;
 
-    this.propagatedRevenue = this.propagateRevenueGrowth(formValues)
+    this.propagatedRevenue = this.propagateRevenueGrowth(formValues);
 
-    const totalProjectedRevenue = this.propagatedRevenue
-      .reduce((acc, curr, ind) => {
-        return acc + curr * this.discountFactor(formValues.discount / 100, ind);
-      }, 0);
+    this.propagatedFCF = this.propagatedRevenue.map( (revenue, index) => {
+      return revenue * FCFtoRevenueRatio;
+    })
 
-    const IV = (totalProjectedRevenue * FCFtoRevenueRatio - formValues.debt) / shares;
+    this.propagatedDFCF = this.propagatedFCF.map( (fcf, index) => {
+      return fcf * this.discountFactor(formValues.discount / 100, index)
+    })
+
+    this.totalProjCashFlow = this.propagatedDFCF.reduce((acc, curr) => acc + curr, 0);
+
+    const IV = this.calculateDFCF(this.totalProjCashFlow, formValues.debt, this.numShares);
     this.intrinsicValueSubject.next(IV);
     return IV;
+  }
+
+  calculateDFCF(projectedFCF: number, debt: number, shares: number): number{
+    return (projectedFCF - debt)/shares
   }
 
   propagateRevenueGrowth(formValues: any): number[] {
@@ -71,7 +88,7 @@ export class CalculatorComponent implements OnInit {
   }
 
   computeGrowthFactors([growth5, growth10, growth20]: number[]): number[] {
-    return Array.from({ length: 20 },
+    return Array.from({ length: 19 },
       (_, index) => {
         if (index < 5) return growth5 / 100;
         else if (index < 10) return growth10 / 100;

@@ -24,15 +24,15 @@ describe('CalculatorComponent', () => {
   });
 
   it('should compute growth factors', () => {
-    const expectedGrowth = [15,15,15,15,15,7,7,7,7,7,4,4,4,4,4,4,4,4,4,4].map( ( num ) => num/100 );
+    const expectedGrowth = [15,15,15,15,15,7,7,7,7,7,4,4,4,4,4,4,4,4,4].map( ( num ) => num/100 );
     const growthFactors = component.computeGrowthFactors([15, 7, 4]);
-    expect(growthFactors.length).toEqual(20);
+    expect(growthFactors.length).toEqual(19);
     expect(growthFactors).toEqual(expectedGrowth);
   });
 
   it('should compute growth factors', () => {
     const projectedRevenue = component.propagateRevenueGrowth({revenue: 1, growth5: 100, growth10: 0, growth20: 100});
-    const expectedReturn = [1, 2, 4, 8, 16, 32, 32, 32, 32, 32, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768];
+    const expectedReturn = [1, 2, 4, 8, 16, 32, 32, 32, 32, 32, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
     expect(projectedRevenue).toEqual(expectedReturn);
   });
 

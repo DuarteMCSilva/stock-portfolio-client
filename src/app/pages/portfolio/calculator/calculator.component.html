@@ -21,8 +21,39 @@
     <label for="discount"> Discount factor: </label>
     <input id="discount" type="number" formControlName="discount">
     <button type="submit" [disabled]="!formGroup.valid">Submit</button>
-</form>
+    <table class="table table-hover">
+        <thead>
+            <th></th>
+            <th *ngFor="let entry of propagatedRevenue; index as index"> {{ 2023 + index }} </th>
+            <th> <strong> TOTAL: </strong></th>
+        </thead>
+        <tbody>
+            <tr>
+                <td> Revenue/Share </td> 
+                <td *ngFor="let entry of propagatedRevenue"> {{ entry / numShares | currency }}</td>
+            </tr>
+            <tr>
+                <td> FCF </td>
+                <td *ngFor="let entry of propagatedFCF"> {{ entry / numShares | currency }} </td>
+            </tr>
+            <tr>
+                <td> DFCF </td>
+                <td *ngFor="let entry of propagatedDFCF"> {{ entry / numShares | currency }} </td>
+                <td> {{ totalProjCashFlow / numShares | currency}}</td>
+            </tr>
+            <tr>
+                <td> Debt </td>
+                <td> {{ formGroup.value.debt / numShares | currency }}</td>
+            </tr>
+            <tr>
+                <td> DFCF Value: </td>
+                <td> {{intrinsicValue$ | async | currency}} </td>
+            </tr>
+        </tbody>
+    </table>
 
-<h2>Intrinsic Value:</h2> <div>{{intrinsicValue$ | async | currency}}</div>
+    <label for="commentary"> Commentary: </label>
+    <input id="commentary" type="text" formControlName="commentary">
+</form>
 
 <h1> History: </h1>
