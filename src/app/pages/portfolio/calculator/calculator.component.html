@@ -1,0 +1,28 @@
+<h1> Calculator </h1>
+
+
+<form [formGroup]="formGroup" (ngSubmit)="computeIntrinsicValue(formGroup.value)">
+    <label for="ticker"> Ticker: </label>
+    <input id="ticker" type="text" formControlName="ticker">
+    <label for="revenue"> Revenue: </label>
+    <input id="revenue" type="number" formControlName="revenue">
+    <label for="debt"> Total Debt: </label>
+    <input id="debt" type="number" formControlName="debt">
+    <label for="fcf"> Free Cash Flow (FCF): </label>
+    <input id="fcf" type="number" formControlName="fcf">
+    <label for="shares"> Number of Shares: </label>
+    <input id="shares" type="number" formControlName="shares">
+    <label for="growth5"> 5y-growth: </label>
+    <input id="growth5" type="number" formControlName="growth5">
+    <label for="growth10"> 10y-growth: </label>
+    <input id="growth10" type="number" formControlName="growth10">
+    <label for="growth20"> 20y-growth: </label>
+    <input id="growth20" type="number" formControlName="growth20">
+    <label for="discount"> Discount factor: </label>
+    <input id="discount" type="number" formControlName="discount">
+    <button type="submit" [disabled]="!formGroup.valid">Submit</button>
+</form>
+
+<h2>Intrinsic Value:</h2> <div>{{intrinsicValue$ | async | currency}}</div>
+
+<h1> History: </h1>

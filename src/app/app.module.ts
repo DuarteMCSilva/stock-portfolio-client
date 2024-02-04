@@ -12,6 +12,7 @@ import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { RouterModule, Routes } from '@angular/router';
 import { PortfolioComponent } from './pages/portfolio/portfolio.component';
 import { CalculatorComponent } from './pages/portfolio/calculator/calculator.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -34,6 +35,7 @@ const routes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     MatTableModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(routes),
   ],
   providers: [],
