@@ -19,6 +19,7 @@
     <tbody>
         <ng-container *ngFor="let entry of evaluations">
             <tr>
+                <td></td>
                 <td> {{ entry.date }} </td>
                 <td class="sector-item"><strong> {{ entry.ticker }}</strong></td>
                 <td> {{ entry.intrinsicValue | currency }} </td>
