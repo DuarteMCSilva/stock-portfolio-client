@@ -2,7 +2,7 @@
     {
         "date": "04 Feb 24",
         "ticker": "GOOGL",
-        "intrinsicValue": 169.02232672550895,
+        "intrinsicValue": 169.02,
         "financials": {
             "revenue": 307400,
             "fcf": 69500,
@@ -19,7 +19,7 @@
     {
         "date": "04 Feb 24",
         "ticker": "PEP",
-        "intrinsicValue": 104.75022686174991,
+        "intrinsicValue": 104.75,
         "financials": {
             "revenue": 91600,
             "fcf": 6950,
@@ -36,7 +36,7 @@
     {
         "date": "04 Feb 24",
         "ticker": "PG",
-        "intrinsicValue": 156.3505908576996,
+        "intrinsicValue": 156.35,
         "financials": {
             "revenue": 83933,
             "fcf": 16000,
