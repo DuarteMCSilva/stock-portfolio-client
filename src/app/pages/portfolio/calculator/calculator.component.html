@@ -30,11 +30,11 @@
         <tbody>
             <tr>
                 <td> Revenue/Share </td> 
-                <td *ngFor="let entry of propagatedRevenue"> {{ entry / numShares | currency }}</td>
+                <td *ngFor="let entry of propagatedRevenue"> {{ entry | currency }}</td>
             </tr>
             <tr>
                 <td> FCF </td>
-                <td *ngFor="let entry of propagatedFCF"> {{ entry / numShares | currency }} </td>
+                <td *ngFor="let entry of propagatedFCF"> {{ entry | currency }} </td>
             </tr>
             <tr>
                 <td> DFCF </td>

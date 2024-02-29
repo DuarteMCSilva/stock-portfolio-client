@@ -68,14 +68,14 @@ export class CalculatorComponent implements OnInit {
 
     this.totalProjCashFlow = this.propagatedDFCF.reduce((acc, curr) => acc + curr, 0);
 
-    const IV = this.calculateDFCF(this.totalProjCashFlow, formValues.debt, this.numShares);
+    const IV = this.calculateDFCF(this.totalProjCashFlow, formValues.debt);
     this.intrinsicValueSubject.next(IV);
     this.intrinsicValue = IV;
     return IV;
   }
 
-  calculateDFCF(projectedFCF: number, debt: number, shares: number): number{
-    return (projectedFCF - debt)/shares
+  calculateDFCF(projectedFCF: number, debt: number): number{
+    return (projectedFCF - debt);
   }
 
   propagateRevenueGrowth(formValues: any): number[] {

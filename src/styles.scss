@@ -70,8 +70,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .table {
   margin: 20px auto;
   width: 950px;
-  background-color: var(--color-grey-300);
-  border-radius: 10px;
+  padding: 5px;
+  border-spacing: 0;
 }
 thead {
   border-bottom: solid black 1px;
@@ -79,9 +79,16 @@ thead {
 
 tbody{
   text-align: center;
+  
 
   .sector-item {
       text-align: left;
+  }
+
+  :nth-child(even){
+    td {
+      background-color: #686868;
+    }
   }
 }
 
@@ -102,4 +109,7 @@ tr {
 
 td {
   padding: 0 10px;
+  background-color: rgb(79, 79, 79);
+  color: #e6e6e6;
+  border-top: 1px solid #686868;
 }

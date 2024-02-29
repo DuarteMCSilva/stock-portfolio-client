@@ -8,15 +8,15 @@ import { Component, OnInit } from '@angular/core';
 export class PortfolioComponent implements OnInit {
 
   entries: StockEntry[] = [
-    { ticker: 'BABA', name: 'Alibaba', sector: 'ECommerce', quantity: 10, lastPrice: 71.82, avgPrice: 148.90 },
-    { ticker: 'GOOGL', name: 'Alphabet', sector: '', quantity: 3, lastPrice: 143.62, avgPrice: 142.53 },
-    { ticker: 'INTC', name: 'Intel Corp', sector: '', quantity: 16, lastPrice: 42.52, avgPrice: 35.25 },
-    { ticker: 'META', name: 'Meta Platforms', sector: '', quantity: 1, lastPrice: 459.39, avgPrice: 140.10 },
-    { ticker: 'PLTR', name: 'Palantir', sector: '', quantity: 10, lastPrice: 17.02, avgPrice: 19.89 },
-    { ticker: 'PYPL', name: 'Paypal', sector: 'Financials', quantity: 11, lastPrice: 62.32, avgPrice: 61.26 },
-    { ticker: 'PEP', name: 'PepsiCo', sector: 'Consumer Def.', quantity: 1, lastPrice: 170.99 , avgPrice: 158.49 },
+    { ticker: 'BABA', name: 'Alibaba', sector: 'ECommerce', quantity: 10, lastPrice: 72.82, avgPrice: 148.90 },
+    { ticker: 'GOOGL', name: 'Alphabet', sector: '', quantity: 3, lastPrice: 149.02, avgPrice: 142.53 },
+    { ticker: 'INTC', name: 'Intel Corp', sector: '', quantity: 16, lastPrice: 43.30, avgPrice: 35.25 },
+    { ticker: 'META', name: 'Meta Platforms', sector: '', quantity: 1, lastPrice: 468.39, avgPrice: 140.10 },
+    { ticker: 'PLTR', name: 'Palantir', sector: '', quantity: 10, lastPrice: 24.38, avgPrice: 19.89 },
+    { ticker: 'PYPL', name: 'Paypal', sector: 'Financials', quantity: 15, lastPrice: 58.90, avgPrice: 60.26 },
+    { ticker: 'PEP', name: 'PepsiCo', sector: 'Consumer Def.', quantity: 1, lastPrice: 167.69 , avgPrice: 158.49 },
     { ticker: 'PG', name: 'Procter & Gamble', sector: 'Consumer Def.', quantity: 1, lastPrice: 157.54, avgPrice: 142.50},
-    { ticker: 'TGT', name: 'Target Corp', sector: 'Consumer Def.', quantity: 4, lastPrice: 145.42, avgPrice: 128.43 }
+    { ticker: 'TGT', name: 'Target Corp', sector: 'Consumer Def.', quantity: 4, lastPrice: 146.52, avgPrice: 128.43 }
   ]
 
   totals = {total: 0, initial: 0};
