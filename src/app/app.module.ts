@@ -5,6 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { ChipModule } from 'primeng/chip';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -40,6 +42,8 @@ const routes: Routes = [
     MatTableModule,
     ReactiveFormsModule,
     HttpClientModule,
+    ButtonModule,
+    ChipModule,
     RouterModule.forRoot(routes),
   ],
   providers: [],
