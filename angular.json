@@ -73,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "broker-app:build:production"
+              "buildTarget": "broker-app:build:production"
             },
             "development": {
-              "browserTarget": "broker-app:build:development"
+              "buildTarget": "broker-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "broker-app:build"
+            "buildTarget": "broker-app:build"
           }
         },
         "test": {
@@ -109,5 +109,8 @@
       }
     }
   },
-  "defaultProject": "broker-app"
+  "defaultProject": "broker-app",
+  "cli": {
+    "analytics": false
+  }
 }
