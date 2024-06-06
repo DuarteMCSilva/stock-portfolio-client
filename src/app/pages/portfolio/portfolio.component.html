@@ -1,7 +1,41 @@
-<h1> Portfolio page </h1>
-
-<div class="card">
-    <p-chart class="p-element" type="line" [data]="data" [options]="options" />
+<h1> Portfolio Overview </h1>
+<div class="grid">
+    <div class="col-12 lg:col-12 xl:col-6">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Total Worth</span>
+                    <div class="text-900 font-medium text-xl">$2.100</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-orange-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                    <i class="pi pi-map-marker text-orange-500 text-xl"></i>
+                </div>
+            </div>
+            <span class="text-green-500 font-medium">%52+ </span>
+            <span class="text-500">since last week</span>
+        </div>
+    </div>
+    <div class="col-12 lg:col-12 xl:col-6">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Evolution (1-year)</span>
+                    <div class="text-900 font-medium text-xl">$2.100</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                    <i class="pi pi-inbox text-cyan-500 text-xl"></i>
+                </div>
+            </div>
+            <span class="text-green-500 font-medium">%52+ </span>
+            <span class="text-500">since last week</span>
+        </div>
+    </div>
+    <div class="col-12 xl:col-12">
+        <div class="card">
+            <h5>Stocks Overview</h5>
+            <p-chart type="line" [data]="data" [options]="options"></p-chart>
+        </div>
+    </div>
 </div>
 <hr>
 <table class="table table-hover">
@@ -9,13 +43,13 @@
         <tr>
             <th></th>
             <th class="sector">Sector<br></th>
-            <th class="text-right">Quantity<br></th>
-            <th class="text-right">Last price<br></th>
-            <th class="text-right">Avg. price<br></th>
-            <th class="text-right">Market<br>value<br></th>
-            <th class="text-right ploss">Profit<br>Loss<br></th>
-            <th class="text-right">Portfolio<br></th>
-            <th class="text-right"></th>
+            <th>Quantity<br></th>
+            <th>Last price<br></th>
+            <th>Avg. price<br></th>
+            <th>Market<br>value<br></th>
+            <th class="ploss">Profit<br>Loss<br></th>
+            <th>Portfolio<br></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -30,6 +64,7 @@
                 <td [ngClass]="{'text-danger': entry.profit! < 0,
             'text-success': entry.profit! > 0.10}"> {{ entry?.profit | percent }}</td>
                 <td> {{ entry.portfolio | percent }}</td>
+                <td> <button (click)="updateTickerPrice(entry.ticker)"> Update </button></td>
             </tr>
         </ng-container>
     </tbody>
@@ -41,6 +76,7 @@
             <td> {{ totals.total | currency }}</td>
             <td> {{ totals.initial | currency }} </td>
             <td> {{ totals.total - totals.initial | currency }}</td>
+            <td></td>
             <td></td>
             <td></td>
         </tr>
