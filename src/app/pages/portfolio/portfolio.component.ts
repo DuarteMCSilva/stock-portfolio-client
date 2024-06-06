@@ -8,7 +8,7 @@ import { MarketstackApiService, YearHistory } from 'src/app/services/api/markets
 })
 export class PortfolioComponent implements OnInit {
 
-  entries: StockEntry[] = [
+  public entries: StockEntry[] = [
     { ticker: 'BABA', name: 'Alibaba', sector: 'ECommerce', quantity: 10, lastPrice: 72.82, avgPrice: 148.90 },
     { ticker: 'GOOGL', name: 'Alphabet', sector: '', quantity: 3, lastPrice: 149.02, avgPrice: 142.53 },
     { ticker: 'INTC', name: 'Intel Corp', sector: '', quantity: 16, lastPrice: 43.30, avgPrice: 35.25 },
@@ -20,10 +20,9 @@ export class PortfolioComponent implements OnInit {
     { ticker: 'TGT', name: 'Target Corp', sector: 'Consumer Def.', quantity: 4, lastPrice: 146.52, avgPrice: 128.43 }
   ];
 
-  totals = {total: 0, initial: 0};
-  public labels = [''];
+  public totals = {total: 0, initial: 0};
   public data: YearHistory = {
-    labels: this.labels,
+    labels: [''],
     datasets: []
   };
 
@@ -45,11 +44,22 @@ export class PortfolioComponent implements OnInit {
 
   constructor(private marketStackApi: MarketstackApiService) { }
 
-
   ngOnInit(): void {
     this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL']).subscribe( (response) => this.data = response);
+    this.updateSecondaryValues();
+  }
+
+  updateTickerPrice(ticker: string) {
+    this.marketStackApi.getPreviousClose(ticker).subscribe( (price) => {
+      const entryIndex = this.entries.findIndex( (entry) => entry.ticker === ticker);
+      this.entries[entryIndex].lastPrice = price;
+      this.updateSecondaryValues();
+    });
+  }
+
+  private updateSecondaryValues() {
     this.totals = this.setPortfolioValue(this.entries);
-    this.entries = this.setOptionalValues();
+    this.entries = this.setAndSortOptionalValues();
   }
 
   private setPortfolioValue(entries: StockEntry[]): Totals {
@@ -57,10 +67,10 @@ export class PortfolioComponent implements OnInit {
       return { total: accumulator.total + entry.lastPrice * entry.quantity,
           initial: accumulator.initial + entry.avgPrice * entry.quantity
       };
-    }, this.totals );
+    }, {total: 0, initial: 0} );
   }
 
-  private setOptionalValues(): StockEntry[] {
+  private setAndSortOptionalValues(): StockEntry[] {
     return this.entries.map(( entry ) => {
       const profit = (entry.lastPrice - entry.avgPrice) / entry.avgPrice;
       const marketValue = entry.lastPrice * entry.quantity;

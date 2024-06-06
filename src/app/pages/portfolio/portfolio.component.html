@@ -43,13 +43,13 @@
         <tr>
             <th></th>
             <th class="sector">Sector<br></th>
-            <th class="text-right">Quantity<br></th>
-            <th class="text-right">Last price<br></th>
-            <th class="text-right">Avg. price<br></th>
-            <th class="text-right">Market<br>value<br></th>
-            <th class="text-right ploss">Profit<br>Loss<br></th>
-            <th class="text-right">Portfolio<br></th>
-            <th class="text-right"></th>
+            <th>Quantity<br></th>
+            <th>Last price<br></th>
+            <th>Avg. price<br></th>
+            <th>Market<br>value<br></th>
+            <th class="ploss">Profit<br>Loss<br></th>
+            <th>Portfolio<br></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -64,6 +64,7 @@
                 <td [ngClass]="{'text-danger': entry.profit! < 0,
             'text-success': entry.profit! > 0.10}"> {{ entry?.profit | percent }}</td>
                 <td> {{ entry.portfolio | percent }}</td>
+                <td> <button (click)="updateTickerPrice(entry.ticker)"> Update </button></td>
             </tr>
         </ng-container>
     </tbody>
@@ -75,6 +76,7 @@
             <td> {{ totals.total | currency }}</td>
             <td> {{ totals.initial | currency }} </td>
             <td> {{ totals.total - totals.initial | currency }}</td>
+            <td></td>
             <td></td>
             <td></td>
         </tr>
