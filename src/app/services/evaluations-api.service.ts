@@ -7,7 +7,7 @@ import { Simulation } from '../pages/portfolio/calculator/calculator.component';
 })
 export class EvaluationsApiService {
 
-  private readonly EVALUATIONS_ENDPOINT = 'assets/evaluations.json' 
+  private readonly EVALUATIONS_ENDPOINT = 'assets/mock-response/evaluations.json';
 
   constructor( private httpClient: HttpClient ) { }
 
@@ -18,6 +18,6 @@ export class EvaluationsApiService {
 
   public postEvaluation() {
     const data = JSON.stringify({name: "bye!"})
-    return this.httpClient.put(this.EVALUATIONS_ENDPOINT, data )
+    return this.httpClient.put(this.EVALUATIONS_ENDPOINT, data );
   }
 }
