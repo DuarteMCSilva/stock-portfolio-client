@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MarketstackApiService, YearHistory } from 'src/app/services/api/marketstack-api.service';
 
 @Component({
   selector: 'app-portfolio',
@@ -17,18 +18,41 @@ export class PortfolioComponent implements OnInit {
     { ticker: 'PEP', name: 'PepsiCo', sector: 'Consumer Def.', quantity: 1, lastPrice: 167.69 , avgPrice: 158.49 },
     { ticker: 'PG', name: 'Procter & Gamble', sector: 'Consumer Def.', quantity: 1, lastPrice: 157.54, avgPrice: 142.50},
     { ticker: 'TGT', name: 'Target Corp', sector: 'Consumer Def.', quantity: 4, lastPrice: 146.52, avgPrice: 128.43 }
-  ]
+  ];
 
   totals = {total: 0, initial: 0};
+  public labels = [''];
+  public data: YearHistory = {
+    labels: this.labels,
+    datasets: []
+  };
 
-  constructor() { }
+  
+  public options = {
+    scales: {
+      x: {
+        ticks: {
+          maxTicksLimit: 11
+        }
+      },
+      y: {
+        ticks: {
+          maxTicksLimit: 6
+        }
+      }
+    }
+  };
+
+  constructor(private marketStackApi: MarketstackApiService) { }
+
 
   ngOnInit(): void {
+    this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL']).subscribe( (response) => this.data = response);
     this.totals = this.setPortfolioValue(this.entries);
     this.entries = this.setOptionalValues();
   }
 
-  setPortfolioValue(entries: StockEntry[]): Totals {
+  private setPortfolioValue(entries: StockEntry[]): Totals {
     return entries.reduce( (accumulator: Totals , entry: StockEntry): Totals => {
       return { total: accumulator.total + entry.lastPrice * entry.quantity,
           initial: accumulator.initial + entry.avgPrice * entry.quantity
@@ -36,7 +60,7 @@ export class PortfolioComponent implements OnInit {
     }, this.totals );
   }
 
-  setOptionalValues(): StockEntry[] {
+  private setOptionalValues(): StockEntry[] {
     return this.entries.map(( entry ) => {
       const profit = (entry.lastPrice - entry.avgPrice) / entry.avgPrice;
       const marketValue = entry.lastPrice * entry.quantity;

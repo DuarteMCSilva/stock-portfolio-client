@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
+import { ChartModule } from 'primeng/chart';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -44,6 +45,7 @@ const routes: Routes = [
     HttpClientModule,
     ButtonModule,
     ChipModule,
+    ChartModule,
     RouterModule.forRoot(routes),
   ],
   providers: [],

@@ -1,6 +1,9 @@
 <h1> Portfolio page </h1>
-<hr>
 
+<div class="card">
+    <p-chart class="p-element" type="line" [data]="data" [options]="options" />
+</div>
+<hr>
 <table class="table table-hover">
     <thead>
         <tr>
@@ -37,7 +40,7 @@
             <td class="sector-item"><strong> Total:</strong></td>
             <td> {{ totals.total | currency }}</td>
             <td> {{ totals.initial | currency }} </td>
-            <td> {{ totals.total - totals.initial| currency }}</td>
+            <td> {{ totals.total - totals.initial | currency }}</td>
             <td></td>
             <td></td>
         </tr>
