@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MarketstackApiService, YearHistory } from 'src/app/services/api/marketstack-api.service';
+import { ChartData } from 'chart.js';
+import { MarketstackApiService } from 'src/app/services/api/marketstack-api.service';
+import { StockEntry } from './portfolio.model';
 
 @Component({
   selector: 'app-portfolio',
@@ -21,13 +23,13 @@ export class PortfolioComponent implements OnInit {
   ];
 
   public totals = {total: 0, initial: 0};
-  public data: YearHistory = {
+  public stockPriceHistoryData: ChartData = {
     labels: [''],
     datasets: []
   };
 
-  
-  public options = {
+  public lineChartOptions = {
+    maintainAspectRatio: true,
     scales: {
       x: {
         ticks: {
@@ -45,11 +47,11 @@ export class PortfolioComponent implements OnInit {
   constructor(private marketStackApi: MarketstackApiService) { }
 
   ngOnInit(): void {
-    this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL']).subscribe( (response) => this.data = response);
+    this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL']).subscribe( (response) => this.stockPriceHistoryData = response);
     this.updateSecondaryValues();
   }
 
-  updateTickerPrice(ticker: string) {
+  onClickUpdateTickerPrice(ticker: string) {
     this.marketStackApi.getPreviousClose(ticker).subscribe( (price) => {
       const entryIndex = this.entries.findIndex( (entry) => entry.ticker === ticker);
       this.entries[entryIndex].lastPrice = price;
@@ -74,33 +76,21 @@ export class PortfolioComponent implements OnInit {
     return this.entries.map(( entry ) => {
       const profit = (entry.lastPrice - entry.avgPrice) / entry.avgPrice;
       const marketValue = entry.lastPrice * entry.quantity;
-      const portfolio = marketValue/this.totals.total;
+      const percentage = marketValue/this.totals.total;
       return {
         ...entry,
         profit,
         marketValue,
-        portfolio
+        percentage
       }
     }).sort( (entry1, entry2) => {
-        if (entry1.portfolio > entry2.portfolio ){
+        if (entry1.percentage > entry2.percentage ){
           return -1;
         }
         else return 1;
     } )
   }
 
-}
-
-interface StockEntry {
-  ticker: string,
-  name: string,
-  sector: string,
-  quantity: number,
-  lastPrice: number,
-  avgPrice: number,
-  profit?: number,
-  marketValue?: number,
-  portfolio?: number
 }
 
 interface Totals {

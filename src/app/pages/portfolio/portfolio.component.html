@@ -30,10 +30,15 @@
             <span class="text-500">since last week</span>
         </div>
     </div>
-    <div class="col-12 xl:col-12">
+    <div class="col-12 lg:col-12 xl:col-6">
         <div class="card">
             <h5>Stocks Overview</h5>
-            <p-chart type="line" [data]="data" [options]="options"></p-chart>
+            <p-chart type="line" [data]="stockPriceHistoryData" [options]="lineChartOptions" height="27vh"></p-chart>
+        </div>
+    </div>
+    <div class="col-12 lg:col-12 xl:col-6">
+        <div class="card">
+            <app-pie-chart [entries]="entries"></app-pie-chart>
         </div>
     </div>
 </div>
@@ -63,8 +68,8 @@
                 <td> {{ entry.marketValue | currency }}</td>
                 <td [ngClass]="{'text-danger': entry.profit! < 0,
             'text-success': entry.profit! > 0.10}"> {{ entry?.profit | percent }}</td>
-                <td> {{ entry.portfolio | percent }}</td>
-                <td> <button (click)="updateTickerPrice(entry.ticker)"> Update </button></td>
+                <td> {{ entry.percentage | percent }}</td>
+                <td> <button (click)="onClickUpdateTickerPrice(entry.ticker)"> Update </button></td>
             </tr>
         </ng-container>
     </tbody>

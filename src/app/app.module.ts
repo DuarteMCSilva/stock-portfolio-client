@@ -18,6 +18,7 @@ import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { PortfolioComponent } from './pages/portfolio/portfolio.component';
 import { CalculatorComponent } from './pages/portfolio/calculator/calculator.component';
 import { HistoryComponent } from './pages/portfolio/history/history.component';
+import { PieChartComponent } from './pages/portfolio/pie-chart/pie-chart.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,7 +36,8 @@ const routes: Routes = [
     NavbarComponent,
     PortfolioComponent,
     CalculatorComponent,
-    HistoryComponent
+    HistoryComponent,
+    PieChartComponent
   ],
   imports: [
     BrowserModule,
