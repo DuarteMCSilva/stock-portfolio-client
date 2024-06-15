@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ChartData } from 'chart.js';
 import { MarketstackApiService } from 'src/app/services/api/marketstack-api.service';
 import { StockEntry } from './portfolio.model';
+import { PortfolioEvolutionBusinessService } from 'src/app/services/business/portfolio-evolution-business.service';
+import { PortfolioEvolutionStateService } from 'src/app/services/state/portfolio-evolution-state.service';
 
 @Component({
   selector: 'app-portfolio',
@@ -11,15 +13,16 @@ import { StockEntry } from './portfolio.model';
 export class PortfolioComponent implements OnInit {
 
   public entries: StockEntry[] = [
-    { ticker: 'BABA', name: 'Alibaba', sector: 'ECommerce', quantity: 10, lastPrice: 72.82, avgPrice: 148.90 },
-    { ticker: 'GOOGL', name: 'Alphabet', sector: '', quantity: 3, lastPrice: 149.02, avgPrice: 142.53 },
-    { ticker: 'INTC', name: 'Intel Corp', sector: '', quantity: 16, lastPrice: 43.30, avgPrice: 35.25 },
-    { ticker: 'META', name: 'Meta Platforms', sector: '', quantity: 1, lastPrice: 468.39, avgPrice: 140.10 },
-    { ticker: 'PLTR', name: 'Palantir', sector: '', quantity: 10, lastPrice: 24.38, avgPrice: 19.89 },
-    { ticker: 'PYPL', name: 'Paypal', sector: 'Financials', quantity: 15, lastPrice: 58.90, avgPrice: 60.26 },
-    { ticker: 'PEP', name: 'PepsiCo', sector: 'Consumer Def.', quantity: 1, lastPrice: 167.69 , avgPrice: 158.49 },
+    { ticker: 'BABA', name: 'Alibaba', sector: 'ECommerce', quantity: 10, lastPrice: 78.98, avgPrice: 148.90 },
+    { ticker: 'GOOGL', name: 'Alphabet', sector: '', quantity: 3, lastPrice: 176.47, avgPrice: 142.51 },
+    { ticker: 'INTC', name: 'Intel Corp', sector: '', quantity: 21, lastPrice: 30.56, avgPrice: 34.14 },
+    { ticker: 'META', name: 'Meta Platforms', sector: '', quantity: 1, lastPrice: 494.76, avgPrice: 140.10 },
+    { ticker: 'NNN', name: 'National Retail Properties Inc', sector: 'REIT', quantity: 7, lastPrice: 42.54, avgPrice: 39.88},
+    { ticker: 'PLTR', name: 'Palantir', sector: '', quantity: 15, lastPrice: 23.32, avgPrice: 20.51 },
+    { ticker: 'PYPL', name: 'Paypal', sector: 'Financials', quantity: 15, lastPrice: 67.33, avgPrice: 60.26 },
     { ticker: 'PG', name: 'Procter & Gamble', sector: 'Consumer Def.', quantity: 1, lastPrice: 157.54, avgPrice: 142.50},
-    { ticker: 'TGT', name: 'Target Corp', sector: 'Consumer Def.', quantity: 4, lastPrice: 146.52, avgPrice: 128.43 }
+    { ticker: 'CRM', name: 'SalesForce', sector: '', quantity: 2, lastPrice: 241.89 , avgPrice: 233.06 },
+    { ticker: 'TGT', name: 'Target Corp', sector: 'Consumer Def.', quantity: 4, lastPrice: 146.52, avgPrice: 128.43 },
   ];
 
   public totals = {total: 0, initial: 0};
@@ -44,10 +47,22 @@ export class PortfolioComponent implements OnInit {
     }
   };
 
-  constructor(private marketStackApi: MarketstackApiService) { }
+  private dates: string[] = [];
+
+  constructor(
+    private marketStackApi: MarketstackApiService,
+    private portfolioEvolutionBusinessService: PortfolioEvolutionBusinessService,
+    private portfolioEvolutionStateService: PortfolioEvolutionStateService
+  ) { }
 
   ngOnInit(): void {
-    this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL']).subscribe( (response) => this.stockPriceHistoryData = response);
+    this.portfolioEvolutionBusinessService
+      .getStockPricesHistory(['AAPL','PYPL'])
+      .subscribe( (response) => {
+        this.dates = response.dates;
+        this.stockPriceHistoryData = this.setDataForEvolutionChart(response)
+        this.stockPriceHistoryData = this.getPortfolioEvolutionGraph();
+      })
     this.updateSecondaryValues();
   }
 
@@ -57,6 +72,24 @@ export class PortfolioComponent implements OnInit {
       this.entries[entryIndex].lastPrice = price;
       this.updateSecondaryValues();
     });
+  }
+
+  getPortfolioEvolutionGraph(): ChartData {
+    const dates = this.dates;
+    const valueHistory: number[] = [];
+
+    dates.forEach( (date, index) => {
+      const valueAtDate = this.portfolioEvolutionStateService.portfolioValueAtDate(date,index);
+      valueHistory.push(valueAtDate);
+    });
+    return {
+      labels: dates,
+      datasets: [{
+        label: 'Ptf',
+        data: valueHistory,
+        fill: false
+      }]
+    }
   }
 
   private updateSecondaryValues() {
@@ -91,6 +124,12 @@ export class PortfolioComponent implements OnInit {
     } )
   }
 
+  private setDataForEvolutionChart(response: any) {
+    return {
+      labels: response.dates,
+      datasets: this.portfolioEvolutionBusinessService.getDatasets(response.pricesByTicker)
+    }
+  }
 }
 
 interface Totals {

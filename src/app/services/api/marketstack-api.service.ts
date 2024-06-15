@@ -16,17 +16,8 @@ export class MarketstackApiService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public getEndOfDayHistory(tickers: string[]): Observable<YearHistory> {
-    // const endpoint = this.EOD_ENDPOINT + `&symbols=${tickers.join(',')}`;
-
-    return this.httpClient.get(this.EOD_ENDPOINT_MOCK).pipe( map( (response: any) => {
-      const resData: any[] = response.data;
-      return {
-        labels: this.getDates(resData, tickers[0]),
-        datasets: this.getDatasets(resData)
-      };
-    }
-  ));
+  public getOneYearHistory(tickers: string[]): Observable<any> {
+    return this.httpClient.get(this.EOD_ENDPOINT_MOCK);
   }
 
   public getPreviousClose(ticker: string) {
@@ -34,66 +25,4 @@ export class MarketstackApiService {
     console.log(endpoint);
     return this.httpClient.get(endpoint).pipe( map( (response: any) => response.results[0].c ));
   }
-
-  private getDatasets(resData: any) { 
-    const datasets: Datasets[] = [];
-
-    this.getValuesByTicker(resData).forEach( (priceHist: number[], ticker: string ) => {
-        datasets.push( {
-          label: ticker,
-          data: priceHist.map( (val) => val/priceHist[0]*100),
-          fill: false
-        } )
-    } );
-
-    return datasets;
-  }
-
-  private getValuesByTicker(resData: any): Map<string, number[]> {
-    return resData.reduce( (acc: Map<string, number[]>, curr: any) => {
-
-      const currTickerHistory = acc.get(curr.symbol);
-
-      if(!currTickerHistory){
-        acc.set(curr.symbol, [curr.close]);
-      }
-      else{
-        acc.set(curr.symbol, [curr.close, ...currTickerHistory]);
-      }
-
-      return acc;
-      
-    }, new Map<string, number[]>());
-  }
-
-  private getDates(resData: any, pivotTicker: string) {
-    return resData.reduce( (acc: Date[], curr:any) => {
-
-      if(curr.symbol !== pivotTicker){
-        return acc;
-      }
-
-      const opts: Intl.DateTimeFormatOptions = {
-        year: '2-digit', month: 'short'
-      }
-      const date = new Date(curr.date).toLocaleDateString('pt-PT', opts);
-    
-      return [date, ...acc];
-
-    }, [] );
-
-  }
-}
-
-interface Datasets {
-    label: string,
-    data: number[],
-    fill: boolean,
-    borderColor?: string,
-    tension?: number
-}
-
-export interface YearHistory {
-  labels: string[],
-  datasets: Datasets[]
 }
