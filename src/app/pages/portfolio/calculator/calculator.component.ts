@@ -58,7 +58,7 @@ export class CalculatorComponent implements OnInit {
 
     this.propagatedRevenue = this.propagateRevenueGrowth(formValues);
 
-    this.propagatedFCF = this.propagatedRevenue.map( (revenue, index) => {
+    this.propagatedFCF = this.propagatedRevenue.map( (revenue) => {
       return revenue * FCFtoRevenueRatio;
     })
 
