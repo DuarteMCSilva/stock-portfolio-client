@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
-import { StockEntry } from '../portfolio.model';
+import { StockEntry } from 'src/app/services/state/portfolio/portfolio.model';
 
 @Component({
   selector: 'app-pie-chart',

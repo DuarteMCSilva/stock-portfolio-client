@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartData } from 'chart.js';
+import { Subscription } from 'rxjs';
 import { MarketstackApiService } from 'src/app/services/api/marketstack-api.service';
-import { StockEntry } from './portfolio.model';
+import { PortfolioBusinessService } from 'src/app/services/business/portfolio-business.service';
+import { StockEntry } from 'src/app/services/state/portfolio/portfolio.model';
 
 @Component({
   selector: 'app-portfolio',
@@ -44,10 +46,11 @@ export class PortfolioComponent implements OnInit {
     }
   };
 
-  constructor(private marketStackApi: MarketstackApiService) { }
+  constructor(private marketStackApi: MarketstackApiService, private portfolioBusinessService: PortfolioBusinessService) { }
 
   ngOnInit(): void {
     this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL']).subscribe( (response) => this.stockPriceHistoryData = response);
+    this.fetchPortfolioSnapshotHistory();
     this.updateSecondaryValues();
   }
 
@@ -91,6 +94,12 @@ export class PortfolioComponent implements OnInit {
     } )
   }
 
+  private fetchPortfolioSnapshotHistory(): Subscription {
+    return this.portfolioBusinessService.getPortfolioState().subscribe( (snapshot) => { 
+      console.log(snapshot);
+      console.warn("WARNING: State management noot yet implemented!");
+    })
+  }
 }
 
 interface Totals {

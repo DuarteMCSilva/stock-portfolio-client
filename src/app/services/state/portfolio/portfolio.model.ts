@@ -4,3 +4,12 @@ export interface HoldingState { // Changes after transaction
     avgPrice: number,
     totalPrice?: number
 }
+
+export interface StockEntry extends HoldingState {
+    lastPrice: number,
+    name?: string,
+    sector?: string,
+    profit?: number,
+    marketValue?: number,
+    percentage?: number
+  }

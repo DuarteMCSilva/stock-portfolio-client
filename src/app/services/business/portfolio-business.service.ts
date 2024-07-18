@@ -1,32 +1,28 @@
 import { Injectable } from '@angular/core';
-import { HoldingState } from './portfolio.model';
-
-export interface TransactionItem {
-  date: string,
-  orderType: string,
-  ticker: string,
-  quantity: number,
-  price: number,
-  fees: number
-}
-
-export interface PortfolioSnapshot {
-  date: string,
-  snapshot: Map<string, HoldingState>
-}
+import { TransactionsApiService } from '../api/transactions-api.service';
+import { map, Observable } from 'rxjs';
+import { PortfolioSnapshot, TransactionItem } from '../state/portfolio/portfolio-state.service';
+import { HoldingState } from '../state/portfolio/portfolio.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PortfolioService {
-  transactions: TransactionItem[] = [];
-  portfolioEvolution: PortfolioSnapshot[] = [];
+export class PortfolioBusinessService {
 
-  readonly NULL_HOLDING: HoldingState = { ticker : '', quantity: 0, avgPrice: 0}
+  constructor(private transactionsApiService: TransactionsApiService) { }
 
-  constructor() { }
+  readonly NULL_HOLDING: HoldingState = { ticker : '', quantity: 0, avgPrice: 0};
 
-  computePortfolioState(transactions: TransactionItem[]): PortfolioSnapshot[]{
+
+  public getPortfolioState(): Observable<PortfolioSnapshot[]> {
+    return this.getTransactions().pipe( map((resp) => this.computePortfolioState(resp)));
+  }
+
+  private getTransactions(): Observable<TransactionItem[]> {
+    return this.transactionsApiService.fetchTransactions();
+  }
+  
+  private computePortfolioState(transactions: TransactionItem[]): PortfolioSnapshot[]{
     let portfolioSnapshots: PortfolioSnapshot[] = [];
 
     transactions.forEach( (transactionItem) => {

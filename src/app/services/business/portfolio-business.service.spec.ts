@@ -1,14 +1,21 @@
 import { TestBed } from '@angular/core/testing';
+import { HoldingState } from '../state/portfolio/portfolio.model';
+import { PortfolioBusinessService } from './portfolio-business.service';
+import { TransactionsApiService } from '../api/transactions-api.service';
+import { of } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
 
-import { PortfolioService } from './portfolio.service';
-import { HoldingState } from './portfolio.model';
 
-describe('PortfolioService', () => {
-  let service: PortfolioService;
+describe('PortfolioBusinessService', () => {
+  let service: PortfolioBusinessService;
+  let transactionsApiService: TransactionsApiService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(PortfolioService);
+    TestBed.configureTestingModule({
+      imports: [ HttpClientModule ]
+    });
+    service = TestBed.inject(PortfolioBusinessService);
+    transactionsApiService = TestBed.inject(TransactionsApiService);
   });
 
   it('should be created', () => {
@@ -16,6 +23,13 @@ describe('PortfolioService', () => {
   });
 
   it('should be created', () => {
+
+    let firstDay;
+    let secondDay;
+    let thirdDay;
+    let fourthDay;
+    let fifthDay;
+
     const transactionsMock =  [
           { date: "19971301:13:01:59", orderType: "buy", ticker: "AAPL", quantity: 3, price: 79.00, fees: 5.99 },
           { date: "19971301:13:02:59", orderType: "buy", ticker: "PG", quantity: 3, price: 158.00, fees: 5.99 },
@@ -56,36 +70,38 @@ describe('PortfolioService', () => {
       }
     ];
 
-    const output = service.computePortfolioState(transactionsMock);
+    spyOn(transactionsApiService, 'fetchTransactions').and.returnValue( of(transactionsMock) );
 
-    const firstDay = output[0];
-    const secondDay = output[1];
-    const thirdDay = output[2];
-    const fourthDay = output[3];
-    const fifthDay = output[4];
+    service.getPortfolioState().subscribe( (output) => {
+      firstDay = output[0];
+      secondDay = output[1];
+      thirdDay = output[2];
+      fourthDay = output[3];
+      fifthDay = output[4];
+    })
 
-    expect(firstDay.date).toEqual(expOutputs[0].date);
-    expect(firstDay.snapshot.get('AAPL')).toEqual(expOutputs[0].snapshot[0]);
-    expect(firstDay.snapshot.get('PG')).toEqual(expOutputs[0].snapshot[1]);
+    expect(firstDay!.date).toEqual(expOutputs[0].date);
+    expect(firstDay!.snapshot.get('AAPL')).toEqual(expOutputs[0].snapshot[0]);
+    expect(firstDay!.snapshot.get('PG')).toEqual(expOutputs[0].snapshot[1]);
 
-    expect(secondDay.date).toEqual(expOutputs[1].date);
-    expect(secondDay.snapshot.get('AAPL')).toEqual(expOutputs[1].snapshot[0]);
-    expect(secondDay.snapshot.get('PG')).toEqual(expOutputs[1].snapshot[1]);
-    expect(secondDay.snapshot.get('PGR')).toEqual(expOutputs[1].snapshot[2]);
+    expect(secondDay!.date).toEqual(expOutputs[1].date);
+    expect(secondDay!.snapshot.get('AAPL')).toEqual(expOutputs[1].snapshot[0]);
+    expect(secondDay!.snapshot.get('PG')).toEqual(expOutputs[1].snapshot[1]);
+    expect(secondDay!.snapshot.get('PGR')).toEqual(expOutputs[1].snapshot[2]);
 
-    expect(thirdDay.date).toEqual(expOutputs[2].date);
-    expect(thirdDay.snapshot.get('AAPL')).toEqual(expOutputs[2].snapshot[0]);
-    expect(thirdDay.snapshot.get('PG')).toEqual(expOutputs[2].snapshot[1]);
-    expect(thirdDay.snapshot.get('PGR')).toEqual(expOutputs[2].snapshot[2]);
+    expect(thirdDay!.date).toEqual(expOutputs[2].date);
+    expect(thirdDay!.snapshot.get('AAPL')).toEqual(expOutputs[2].snapshot[0]);
+    expect(thirdDay!.snapshot.get('PG')).toEqual(expOutputs[2].snapshot[1]);
+    expect(thirdDay!.snapshot.get('PGR')).toEqual(expOutputs[2].snapshot[2]);
 
-    expect(fourthDay.date).toEqual(expOutputs[3].date);
-    expect(fourthDay.snapshot.get('AAPL')).toEqual(expOutputs[3].snapshot[0]);
-    expect(fourthDay.snapshot.get('PG')).toEqual(expOutputs[3].snapshot[1]);
-    expect(fourthDay.snapshot.get('PGR')).toEqual(expOutputs[3].snapshot[2]);
+    expect(fourthDay!.date).toEqual(expOutputs[3].date);
+    expect(fourthDay!.snapshot.get('AAPL')).toEqual(expOutputs[3].snapshot[0]);
+    expect(fourthDay!.snapshot.get('PG')).toEqual(expOutputs[3].snapshot[1]);
+    expect(fourthDay!.snapshot.get('PGR')).toEqual(expOutputs[3].snapshot[2]);
 
-    expect(fifthDay.date).toEqual(expOutputs[4].date);
-    expect(fifthDay.snapshot.get('AAPL')).toEqual(undefined);
-    expect(fifthDay.snapshot.get('PG')).toEqual(expOutputs[4].snapshot[0]);
-    expect(fifthDay.snapshot.get('PGR')).toEqual(expOutputs[4].snapshot[1]);
+    expect(fifthDay!.date).toEqual(expOutputs[4].date);
+    expect(fifthDay!.snapshot.get('AAPL')).toEqual(undefined);
+    expect(fifthDay!.snapshot.get('PG')).toEqual(expOutputs[4].snapshot[0]);
+    expect(fifthDay!.snapshot.get('PGR')).toEqual(expOutputs[4].snapshot[1]);
   });
 });
