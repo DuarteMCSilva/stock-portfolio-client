@@ -17,14 +17,14 @@ describe('PortfolioBusinessService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should be created', () => {
+  it('should computePortfolioState', () => {
     const transactionsMock =  [
-          { date: "19971301:13:01:59", orderType: "buy", ticker: "AAPL", quantity: 3, price: 79.00, fees: 5.99 },
-          { date: "19971301:13:02:59", orderType: "buy", ticker: "PG", quantity: 3, price: 158.00, fees: 5.99 },
-          { date: "19971302:13:03:59", orderType: "buy", ticker: "PGR", quantity: 2, price: 158.00, fees: 5.99 },
-          { date: "19971304:13:04:59", orderType: "sell", ticker: "AAPL", quantity: 2, price: 158.00, fees: 5.99 },
-          { date: "19971305:13:05:59", orderType: "buy", ticker: "PGR", quantity: 6, price: 170.00, fees: 5.99 },
-          { date: "19971306:13:06:59", orderType: "sell", ticker: "AAPL", quantity: 1, price: 158.00, fees: 5.99 },
+          { date: "19971301:13:01:59", orderType: "BUY", ticker: "AAPL", quantity: 3, price: 79.00, fees: 5.99 },
+          { date: "19971301:13:02:59", orderType: "BUY", ticker: "PG", quantity: 3, price: 158.00, fees: 5.99 },
+          { date: "19971302:13:03:59", orderType: "BUY", ticker: "PGR", quantity: 2, price: 158.00, fees: 5.99 },
+          { date: "19971304:13:04:59", orderType: "SELL", ticker: "AAPL", quantity: 2, price: 158.00, fees: 5.99 },
+          { date: "19971305:13:05:59", orderType: "BUY", ticker: "PGR", quantity: 6, price: 170.00, fees: 5.99 },
+          { date: "19971306:13:06:59", orderType: "SELL", ticker: "AAPL", quantity: 1, price: 158.00, fees: 5.99 },
       ]
 
     const expOutputs: {date: string, snapshot: HoldingState[] }[] = [

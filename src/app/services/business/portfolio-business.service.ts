@@ -3,6 +3,7 @@ import { TransactionsApiService } from '../api/transactions-api.service';
 import { catchError, finalize, map, Observable, tap } from 'rxjs';
 import { PortfolioSnapshot, PortfolioStateService, TransactionItem } from '../state/portfolio/portfolio-state.service';
 import { HoldingState } from '../state/portfolio/portfolio.model';
+import { OrderType } from '../api/csv-handler/csv-handler-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,9 @@ export class PortfolioBusinessService {
   private computePortfolioState(transactions: TransactionItem[]): PortfolioSnapshot[]{
     let portfolioSnapshots: PortfolioSnapshot[] = [];
 
-    transactions.forEach( (transactionItem) => {
+    transactions
+      .filter( (transactionItem) => (transactionItem.orderType === OrderType.BUY ) || (transactionItem.orderType === OrderType.SELL) )
+      .forEach( (transactionItem) => {
       const date = transactionItem.date.slice(0,8);
       const holdingState = this.computeNewHoldingState(transactionItem, portfolioSnapshots);
       const dailyEntry = portfolioSnapshots.find( (entry) => entry.date === date );
@@ -63,7 +66,7 @@ export class PortfolioBusinessService {
     portfolioSnapshots.push({
       date: date,
       snapshot: dailySnapshot
-    }) 
+    })
     return portfolioSnapshots;
   }
 
@@ -85,7 +88,7 @@ export class PortfolioBusinessService {
 
     const quantity = this.computeQuantity(transactionItem, lastTickerEntry );
     const avgPrice = this.computeAvgPrice(transactionItem, lastTickerEntry );
-    const totalPrice = quantity * avgPrice;
+    const totalPrice = +((quantity * avgPrice).toFixed(2));
 
     return { ticker: transactionItem.ticker, quantity, avgPrice, totalPrice };
   }
@@ -103,14 +106,14 @@ export class PortfolioBusinessService {
   }
 
   private computeQuantity(transactionItem: TransactionItem, previousEntry: HoldingState ) {
-    if(transactionItem.orderType === 'buy') return previousEntry.quantity + transactionItem.quantity;
-    if(transactionItem.orderType === 'sell') return previousEntry.quantity - transactionItem.quantity;
+    if(transactionItem.orderType === OrderType.BUY) return previousEntry.quantity + transactionItem.quantity;
+    if(transactionItem.orderType === OrderType.SELL) return previousEntry.quantity - transactionItem.quantity;
 
     return previousEntry.quantity;
   }
 
   private computeAvgPrice(transactionItem: TransactionItem, previousEntry: HoldingState ): number {
-    if(transactionItem.orderType !== 'buy') return previousEntry.avgPrice;
+    if(transactionItem.orderType !== OrderType.BUY) return previousEntry.avgPrice;
 
     const quantity = transactionItem.quantity + previousEntry.quantity;
     const total = transactionItem.price * transactionItem.quantity + previousEntry.avgPrice * previousEntry.quantity;
