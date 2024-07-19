@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TransactionsApiService } from '../api/transactions-api.service';
-import { map, Observable } from 'rxjs';
-import { PortfolioSnapshot, TransactionItem } from '../state/portfolio/portfolio-state.service';
+import { catchError, finalize, map, Observable, tap } from 'rxjs';
+import { PortfolioSnapshot, PortfolioStateService, TransactionItem } from '../state/portfolio/portfolio-state.service';
 import { HoldingState } from '../state/portfolio/portfolio.model';
 
 @Injectable({
@@ -9,13 +9,27 @@ import { HoldingState } from '../state/portfolio/portfolio.model';
 })
 export class PortfolioBusinessService {
 
-  constructor(private transactionsApiService: TransactionsApiService) { }
+  constructor(
+    private transactionsApiService: TransactionsApiService,
+    private portfolioStateService: PortfolioStateService
+  ) { }
 
   readonly NULL_HOLDING: HoldingState = { ticker : '', quantity: 0, avgPrice: 0};
 
 
-  public getPortfolioState(): Observable<PortfolioSnapshot[]> {
-    return this.getTransactions().pipe( map((resp) => this.computePortfolioState(resp)));
+  public fetchPortfolioState(): void {
+    this.portfolioStateService.isLoading = true;
+    this.getTransactions().pipe(
+      tap((transactions) => this.portfolioStateService.transactions = transactions ),
+      map((transactions) => this.computePortfolioState(transactions)),
+      tap((snapshots) => {
+        this.portfolioStateService.snapshotHistory = snapshots;
+        console.warn("Persisted snapshots:" );
+        console.log(snapshots);
+      }),
+      catchError( (err) => this.portfolioStateService.error = err),
+      finalize( () => this.portfolioStateService.isLoading = false)
+    ).subscribe();
   }
 
   private getTransactions(): Observable<TransactionItem[]> {

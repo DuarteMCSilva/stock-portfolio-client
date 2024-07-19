@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartData } from 'chart.js';
-import { Subscription } from 'rxjs';
 import { MarketstackApiService } from 'src/app/services/api/marketstack-api.service';
 import { PortfolioBusinessService } from 'src/app/services/business/portfolio-business.service';
 import { StockEntry } from 'src/app/services/state/portfolio/portfolio.model';
@@ -94,11 +93,8 @@ export class PortfolioComponent implements OnInit {
     } )
   }
 
-  private fetchPortfolioSnapshotHistory(): Subscription {
-    return this.portfolioBusinessService.getPortfolioState().subscribe( (snapshot) => { 
-      console.log(snapshot);
-      console.warn("WARNING: State management noot yet implemented!");
-    })
+  private fetchPortfolioSnapshotHistory(){
+    return this.portfolioBusinessService.fetchPortfolioState();
   }
 }
 
