@@ -1,21 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { HoldingState } from '../state/portfolio/portfolio.model';
 import { PortfolioBusinessService } from './portfolio-business.service';
-import { TransactionsApiService } from '../api/transactions-api.service';
-import { of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
-
 
 describe('PortfolioBusinessService', () => {
   let service: PortfolioBusinessService;
-  let transactionsApiService: TransactionsApiService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientModule ]
     });
     service = TestBed.inject(PortfolioBusinessService);
-    transactionsApiService = TestBed.inject(TransactionsApiService);
   });
 
   it('should be created', () => {
@@ -23,13 +18,6 @@ describe('PortfolioBusinessService', () => {
   });
 
   it('should be created', () => {
-
-    let firstDay;
-    let secondDay;
-    let thirdDay;
-    let fourthDay;
-    let fifthDay;
-
     const transactionsMock =  [
           { date: "19971301:13:01:59", orderType: "buy", ticker: "AAPL", quantity: 3, price: 79.00, fees: 5.99 },
           { date: "19971301:13:02:59", orderType: "buy", ticker: "PG", quantity: 3, price: 158.00, fees: 5.99 },
@@ -70,15 +58,13 @@ describe('PortfolioBusinessService', () => {
       }
     ];
 
-    spyOn(transactionsApiService, 'fetchTransactions').and.returnValue( of(transactionsMock) );
-
-    service.getPortfolioState().subscribe( (output) => {
-      firstDay = output[0];
-      secondDay = output[1];
-      thirdDay = output[2];
-      fourthDay = output[3];
-      fifthDay = output[4];
-    })
+    const output = service['computePortfolioState'](transactionsMock);
+    
+    let firstDay = output[0];
+    let secondDay = output[1];
+    let thirdDay = output[2];
+    let fourthDay = output[3];
+    let fifthDay = output[4];
 
     expect(firstDay!.date).toEqual(expOutputs[0].date);
     expect(firstDay!.snapshot.get('AAPL')).toEqual(expOutputs[0].snapshot[0]);
