@@ -17,7 +17,7 @@ describe('PortfolioBusinessService', () => {
     expect(service).toBeTruthy();
   });
 
-  xit('should be created', () => {
+  it('should be created', () => {
     const transactionsMock =  [
           { date: "19971301:13:01:59", orderType: "buy", ticker: "AAPL", quantity: 3, price: 79.00, fees: 5.99 },
           { date: "19971301:13:02:59", orderType: "buy", ticker: "PG", quantity: 3, price: 158.00, fees: 5.99 },
