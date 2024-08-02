@@ -17,7 +17,6 @@ export class PortfolioBusinessService {
 
   readonly NULL_HOLDING: HoldingState = { ticker : '', quantity: 0, avgPrice: 0};
 
-
   public fetchPortfolioState(): void {
     this.portfolioStateService.isLoading = true;
     this.getTransactions().pipe(

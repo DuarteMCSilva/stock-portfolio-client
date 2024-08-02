@@ -10,6 +10,7 @@ import { StockEntry } from 'src/app/services/state/portfolio/portfolio.model';
 export class PieChartComponent implements OnChanges {
 
   @Input() entries: StockEntry[] = [];
+  @Input() totalValue: number = 1;
     
   public pieChartOptions: ChartOptions<'pie'> = {};
 
@@ -35,9 +36,11 @@ export class PieChartComponent implements OnChanges {
   private computePieChartData() {
     const pieChart: { labels: string[], data: number[] } = { labels: [], data: [] };
     const pieChartData = this.entries.reduce( (acc, curr: StockEntry) => {
+      const percentage = (curr.marketValue ?? 0) / this.totalValue;
+
       return {
         labels: [curr.ticker, ...acc.labels ],
-        data: [curr.percentage ?? 0, ...acc.data ]
+        data: [percentage, ...acc.data ]
       };
     }, pieChart );
 

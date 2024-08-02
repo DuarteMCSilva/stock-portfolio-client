@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
 import { ChartData } from 'chart.js';
 import { MarketstackApiService } from 'src/app/services/api/marketstack-api.service';
 import { PortfolioBusinessService } from 'src/app/services/business/portfolio-business.service';
+import { PortfolioStateService } from 'src/app/services/state/portfolio/portfolio-state.service';
 import { StockEntry } from 'src/app/services/state/portfolio/portfolio.model';
 
 @Component({
@@ -10,6 +11,9 @@ import { StockEntry } from 'src/app/services/state/portfolio/portfolio.model';
   styleUrls: ['./portfolio.component.scss']
 })
 export class PortfolioComponent implements OnInit {
+
+  public entries$: Signal<StockEntry[] | undefined>;
+  public total$: Signal<number>;
 
   public entries: StockEntry[] = [
     { ticker: 'BABA', name: 'Alibaba', sector: 'ECommerce', quantity: 10, lastPrice: 72.82, avgPrice: 148.90 },
@@ -45,61 +49,26 @@ export class PortfolioComponent implements OnInit {
     }
   };
 
-  constructor(private marketStackApi: MarketstackApiService, private portfolioBusinessService: PortfolioBusinessService) { }
+  constructor(private marketStackApi: MarketstackApiService, private portfolioBusinessService: PortfolioBusinessService,
+    private portfolioStateService: PortfolioStateService
+  ) {
+      this.entries$ = this.portfolioStateService.currentSnapshot;
+      this.total$ = this.portfolioStateService.currentValue;
+  }
 
   ngOnInit(): void {
     this.marketStackApi.getHistoricalPrices().subscribe( (a) => console.log(a));
     this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL']).subscribe( (response) => this.stockPriceHistoryData = response);
     this.fetchPortfolioSnapshotHistory();
-    this.updateSecondaryValues();
   }
 
-  onClickUpdateTickerPrice(ticker: string) {
+  onClickUpdateTickerPrice(ticker: string) {  // TODO: KEEP?
     this.marketStackApi.getPreviousClose(ticker).subscribe( (price) => {
-      const entryIndex = this.entries.findIndex( (entry) => entry.ticker === ticker);
-      this.entries[entryIndex].lastPrice = price;
-      this.updateSecondaryValues();
+        this.portfolioStateService.updatePrice(ticker, price);
     });
-  }
-
-  private updateSecondaryValues() {
-    this.totals = this.setPortfolioValue(this.entries);
-    this.entries = this.setAndSortOptionalValues();
-  }
-
-  private setPortfolioValue(entries: StockEntry[]): Totals {
-    return entries.reduce( (accumulator: Totals , entry: StockEntry): Totals => {
-      return { total: accumulator.total + entry.lastPrice * entry.quantity,
-          initial: accumulator.initial + entry.avgPrice * entry.quantity
-      };
-    }, {total: 0, initial: 0} );
-  }
-
-  private setAndSortOptionalValues(): StockEntry[] {
-    return this.entries.map(( entry ) => {
-      const profit = (entry.lastPrice - entry.avgPrice) / entry.avgPrice;
-      const marketValue = entry.lastPrice * entry.quantity;
-      const percentage = marketValue/this.totals.total;
-      return {
-        ...entry,
-        profit,
-        marketValue,
-        percentage
-      }
-    }).sort( (entry1, entry2) => {
-        if (entry1.percentage > entry2.percentage ){
-          return -1;
-        }
-        else return 1;
-    } )
   }
 
   private fetchPortfolioSnapshotHistory(){
     return this.portfolioBusinessService.fetchPortfolioState();
   }
-}
-
-interface Totals {
-  total: number,
-  initial: number
 }

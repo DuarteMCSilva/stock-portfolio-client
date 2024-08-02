@@ -5,13 +5,13 @@
             <div class="flex justify-content-between mb-3">
                 <div>
                     <span class="block text-500 font-medium mb-3">Total Worth</span>
-                    <div class="text-900 font-medium text-xl">$2.100</div>
+                    <div class="text-900 font-medium text-xl"> {{ total$() | currency }}</div>
                 </div>
                 <div class="flex align-items-center justify-content-center bg-orange-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
                     <i class="pi pi-map-marker text-orange-500 text-xl"></i>
                 </div>
             </div>
-            <span class="text-green-500 font-medium">%52+ </span>
+            <span class="text-green-500 font-medium">%?? </span>
             <span class="text-500">since last week</span>
         </div>
     </div>
@@ -20,13 +20,13 @@
             <div class="flex justify-content-between mb-3">
                 <div>
                     <span class="block text-500 font-medium mb-3">Evolution (1-year)</span>
-                    <div class="text-900 font-medium text-xl">$2.100</div>
+                    <div class="text-900 font-medium text-xl">-</div>
                 </div>
                 <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
                     <i class="pi pi-inbox text-cyan-500 text-xl"></i>
                 </div>
             </div>
-            <span class="text-green-500 font-medium">%52+ </span>
+            <span class="text-green-500 font-medium">%- </span>
             <span class="text-500">since last week</span>
         </div>
     </div>
@@ -38,7 +38,11 @@
     </div>
     <div class="col-12 lg:col-12 xl:col-6">
         <div class="card">
-            <app-pie-chart [entries]="entries"></app-pie-chart>
+            <app-pie-chart 
+                *ngIf="entries$() as entries" 
+                [entries]="entries"
+                [totalValue]="total$()"
+                ></app-pie-chart>
         </div>
     </div>
 </div>
@@ -58,7 +62,7 @@
         </tr>
     </thead>
     <tbody>
-        <ng-container *ngFor="let entry of entries">
+        <ng-container *ngFor="let entry of entries$()">
             <tr>
                 <td class="sector-item"><strong> {{ entry.ticker }}</strong> {{ " • " + entry.name }} </td>
                 <td> {{ entry.sector }} </td>
@@ -68,7 +72,7 @@
                 <td> {{ entry.marketValue | currency }}</td>
                 <td [ngClass]="{'text-danger': entry.profit! < 0,
             'text-success': entry.profit! > 0.10}"> {{ entry?.profit | percent }}</td>
-                <td> {{ entry.percentage | percent }}</td>
+                <td> {{ (entry.marketValue ?? 0 )/total$() | percent }}</td>
                 <td> <button (click)="onClickUpdateTickerPrice(entry.ticker)"> Update </button></td>
             </tr>
         </ng-container>
@@ -78,9 +82,9 @@
             <td></td>
             <td></td>
             <td class="sector-item"><strong> Total:</strong></td>
-            <td> {{ totals.total | currency }}</td>
+            <td> {{ total$() | currency }}</td>
             <td> {{ totals.initial | currency }} </td>
-            <td> {{ totals.total - totals.initial | currency }}</td>
+            <td> {{ total$() - totals.initial | currency }}</td>
             <td></td>
             <td></td>
             <td></td>

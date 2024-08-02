@@ -1,5 +1,5 @@
 import { computed, Injectable, Signal, signal } from '@angular/core';
-import { HoldingState } from './portfolio.model';
+import { HoldingState, StockEntry } from './portfolio.model';
 
 export interface TransactionItem {
   date: string,
@@ -15,10 +15,17 @@ export interface PortfolioSnapshot {
   snapshot: Map<string, HoldingState>
 }
 
+interface Totals {
+  total: number,
+  initial: number
+}
+
 interface State {
   isLoading: boolean;
+  initialValue: number;
+  currentValue: number;
   snapshotHistory: PortfolioSnapshot[];
-  currentSnapshot?: PortfolioSnapshot;
+  currentSnapshot?: StockEntry[];
   transactionHistory: TransactionItem[];
   error: string;
 }
@@ -34,6 +41,8 @@ export class PortfolioStateService {
   // Store/State
   private portfolioState = signal<State>({
     isLoading: false,
+    initialValue: 0,
+    currentValue: 0,
     currentSnapshot: undefined,
     snapshotHistory: [],
     transactionHistory: [],
@@ -48,7 +57,11 @@ export class PortfolioStateService {
     return computed(() => this.portfolioState().isLoading);
   }
 
-  get currentSnapshot(): Signal<PortfolioSnapshot | undefined> {
+  get currentValue(): Signal<number> {
+    return computed(() => this.portfolioState().currentValue);
+  }
+
+  get currentSnapshot(): Signal<StockEntry[] | undefined> {
     return computed(() => this.portfolioState().currentSnapshot);
   }
 
@@ -70,11 +83,15 @@ export class PortfolioStateService {
   }
 
   set snapshotHistory(snapshotHistory: PortfolioSnapshot[]) {
+    const currEntries = this.computeCurrentSnapshot(snapshotHistory.slice(-1)[0]);
+    const totalValue = this.computePortfolioValue(currEntries).total;
+
     this.portfolioState.update(
       (state) => ({
         ...state,
         snapshotHistory,
-        currentSnapshot: snapshotHistory.slice(-1)[0] 
+        currentSnapshot: currEntries,
+        currentValue: totalValue
       })
     );
   }
@@ -85,5 +102,89 @@ export class PortfolioStateService {
 
   set error(error: string) {
     this.portfolioState.update((state) => ({ ...state, error }));
+  }
+
+  public updatePrice(ticker: string, price: number) {
+      const currSnapshot = this.currentSnapshot();
+
+      if(!currSnapshot) return;
+
+      const entryIndex = currSnapshot.findIndex( (entry) => entry.ticker === ticker);
+      const entryToUpdate = currSnapshot[entryIndex];
+      currSnapshot[entryIndex] = {
+          ...entryToUpdate,
+          lastPrice: price,
+          profit: this.computeProfit(price, entryToUpdate.avgPrice),
+          marketValue: entryToUpdate.quantity * price 
+      }
+      
+      this.portfolioState.update( (state) => ({
+        ...state,
+        currentSnapshot: this.sortSnapshotByValue(currSnapshot),
+        currentValue: this.computePortfolioValue(currSnapshot).total
+      }))
+  }
+
+  private computeCurrentSnapshot(lastState: PortfolioSnapshot): StockEntry[] {
+    const entries: StockEntry[] = [];
+    lastState.snapshot?.forEach( (stockEntry) => {
+        const lastPrice = this.getPriceAtDate(stockEntry.ticker, lastState.date);
+        const profit = (lastPrice - stockEntry.avgPrice) / stockEntry.avgPrice;
+        const marketValue = lastPrice * stockEntry.quantity;
+
+        entries.push( {
+          ...stockEntry, 
+          name: stockEntry.ticker,
+          lastPrice,
+          marketValue,
+          profit
+        })
+    });
+    return this.sortSnapshotByValue(entries);
+  }
+
+  private sortSnapshotByValue(entries: StockEntry[]): StockEntry[] {
+      return entries.sort( (entry1, entry2) => {
+        if (entry1.marketValue! > entry2.marketValue! ){
+          return -1;
+        }
+        else return 1;
+      });
+  }
+
+  private computeProfit(price: number, avgPrice: number) {
+    return (price - avgPrice) / avgPrice;
+  }
+
+  private computePortfolioValue(entries: StockEntry[]): Totals {
+    return entries.reduce( (accumulator: Totals , entry: StockEntry): Totals => {
+      return { total: accumulator.total + entry.lastPrice * entry.quantity,
+          initial: accumulator.initial + entry.avgPrice * entry.quantity
+      };
+    }, {total: 0, initial: 0} );
+  }
+
+  private getPriceAtDate(ticker: string, date: string): number {
+    const mockMap = new Map<string, number>();
+
+    mockMap.set("ALTR.LS", 0);
+    mockMap.set("PLTR", 26);
+    mockMap.set("GVOLT", 0);
+    mockMap.set("PG", 147);
+    mockMap.set("SXRV", 980);
+    mockMap.set("VUAA", 102.08);
+    mockMap.set("QDVE", 27);
+    mockMap.set("LU1681045370", 4.85);
+    mockMap.set("CRM", 220);
+    mockMap.set("META", 475);
+    mockMap.set("GOOGL", 165);
+    mockMap.set("INTC", 29.06);
+    mockMap.set("PYPL", 65.31);
+    mockMap.set("NNN", 45.98);
+    mockMap.set("TGT", 147.02);
+    mockMap.set("BABA", 77.92);
+    console.log(date);
+    
+    return mockMap.get(ticker) ?? 1;
   }
 }
