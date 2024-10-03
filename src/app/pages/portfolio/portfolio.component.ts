@@ -57,7 +57,6 @@ export class PortfolioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.marketStackApi.getHistoricalPrices().subscribe( (a) => console.log(a));
     this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL']).subscribe( (response) => this.stockPriceHistoryData = response);
     this.fetchPortfolioSnapshotHistory();
   }
