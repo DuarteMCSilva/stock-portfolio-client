@@ -126,7 +126,7 @@ export class CsvHandlerApiService {
     map.set('CVR ENERGY INC. COMMON', 'CVI');
     map.set('DELTA AIR LINES INC.', 'DAL');~
     map.set('ALPHABET INC. - CLASS A', 'GOOGL');
-    map.set('GREENVOLT', 'GVOLT');
+    map.set('GREENVOLT', 'GVOLT.LS');
     map.set('HP INC', 'HPQ');
     map.set('INTEL CORPORATION - CO', 'INTC');
     map.set('META PLATFORMS INC', 'META');
@@ -137,17 +137,17 @@ export class CsvHandlerApiService {
     map.set('PROCTER & GAMBLE COMPA', 'PG');
     map.set('PROGRESSIVE CORPORATIO','PGR');
     map.set('TARGET CORPORATION COM', 'TGT');
-    map.set('MARTIFER', 'MAR')
+    map.set('MARTIFER', 'MAR.LS')
 
     // ETFs
-    map.set('ISHARES NASDAQ US BIOTECHNOLOGY ETF USD ACC', '2B70');
-    map.set('ISHARES DIGITAL SECURITY UCITS ETF USD ACC', 'L0CK');
-    map.set('AMUNDI MSCI EMERGING MARKETS UCITS ETF - EUR (C)', 'LU1681045370');
-    map.set('ISHARES S&P 500 INF TECH SECTOR UCITS ETF USD(ACC)', 'QDVE');
-    map.set('ISHARES NASDAQ-100 UCITS ETF (DE)', 'SXRV(2)');
-    map.set('ISHARES NASDAQ 100 UCITS ETF USD (ACC)', 'SXRV');
-    map.set('VANGUARD S&P 500 UCITS ETF USD', 'VUAA');
-    map.set('XTRACKERS MSCI EMERGING MARKETS UCITS ETF 1C', 'XMME');   
+    map.set('ISHARES NASDAQ US BIOTECHNOLOGY ETF USD ACC', '2B70.DE');
+    map.set('ISHARES DIGITAL SECURITY UCITS ETF USD ACC', 'L0CK.DE');
+    map.set('AMUNDI MSCI EMERGING MARKETS UCITS ETF - EUR (C)', 'AMEM.DE');
+    map.set('ISHARES S&P 500 INF TECH SECTOR UCITS ETF USD(ACC)', 'QDVE.DE');
+    map.set('ISHARES NASDAQ-100 UCITS ETF (DE)', 'SXRV.DE');
+    map.set('ISHARES NASDAQ 100 UCITS ETF USD (ACC)', 'SXRV.MU');
+    map.set('VANGUARD S&P 500 UCITS ETF USD', 'VUAA.DE');
+    map.set('XTRACKERS MSCI EMERGING MARKETS UCITS ETF 1C', '#XMME');   
     return map;
   }
 }

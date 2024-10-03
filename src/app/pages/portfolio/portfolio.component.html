@@ -33,7 +33,9 @@
     <div class="col-12 lg:col-12 xl:col-6">
         <div class="card">
             <h5>Stocks Overview</h5>
-            <p-chart type="line" [data]="stockPriceHistoryData" [options]="lineChartOptions" height="27vh"></p-chart>
+            <ng-container *ngIf="stockPriceHistoryData$ !== undefined && stockPriceHistoryData$() !== undefined">
+                <p-chart type="line" [data]="stockPriceHistoryData$()" [options]="lineChartOptions" height="27vh"></p-chart>
+            </ng-container>
         </div>
     </div>
     <div class="col-12 lg:col-12 xl:col-6">

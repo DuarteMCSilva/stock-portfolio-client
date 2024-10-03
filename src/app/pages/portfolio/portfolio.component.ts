@@ -1,6 +1,6 @@
-import { Component, OnInit, Signal } from '@angular/core';
+import { Component, computed, OnInit, Signal } from '@angular/core';
 import { ChartData } from 'chart.js';
-import { MarketstackApiService } from 'src/app/services/api/marketstack-api.service';
+import { Datasets, MarketstackApiService, YearHistory } from 'src/app/services/api/marketstack-api.service';
 import { PortfolioBusinessService } from 'src/app/services/business/portfolio-business.service';
 import { PortfolioStateService } from 'src/app/services/state/portfolio/portfolio-state.service';
 import { StockEntry } from 'src/app/services/state/portfolio/portfolio.model';
@@ -33,6 +33,8 @@ export class PortfolioComponent implements OnInit {
     datasets: []
   };
 
+  public stockPriceHistoryData$?: Signal<ChartData>
+
   public lineChartOptions = {
     maintainAspectRatio: true,
     scales: {
@@ -57,8 +59,24 @@ export class PortfolioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL']).subscribe( (response) => this.stockPriceHistoryData = response);
+    this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL'])
+      .subscribe( (response) => {
+        this.stockPriceHistoryData = response;
+        debugger;
+      });
     this.fetchPortfolioSnapshotHistory();
+
+    this.stockPriceHistoryData$ = computed( () => {
+      const hist = this.portfolioStateService.recentHistory()
+      const ret = {
+        labels: Array.from(hist?.keys() ?? []),
+        datasets: [
+          { label: 'Portfolio', data: Array.from(hist?.values() ?? []), fill: false} as Datasets
+        ]
+      } as YearHistory
+      debugger
+      return  ret;
+    })
   }
 
   onClickUpdateTickerPrice(ticker: string) {  // TODO: KEEP?

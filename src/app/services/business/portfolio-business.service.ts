@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
 import { TransactionsApiService } from '../api/transactions-api.service';
-import { catchError, finalize, map, Observable, tap } from 'rxjs';
+import { catchError, finalize, forkJoin, map, Observable, tap } from 'rxjs';
 import { PortfolioSnapshot, PortfolioStateService, TransactionItem } from '../state/portfolio/portfolio-state.service';
-import { HoldingState } from '../state/portfolio/portfolio.model';
+import { HoldingState, StockEntry } from '../state/portfolio/portfolio.model';
 import { OrderType } from '../api/csv-handler/csv-handler-api.service';
+import { MarketstackApiService } from '../api/marketstack-api.service';
+
+interface StockPrices {
+    [ticker: string]: Map<string, number>;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +17,8 @@ export class PortfolioBusinessService {
 
   constructor(
     private transactionsApiService: TransactionsApiService,
-    private portfolioStateService: PortfolioStateService
+    private portfolioStateService: PortfolioStateService,
+    private marketStackApiService: MarketstackApiService
   ) { }
 
   readonly NULL_HOLDING: HoldingState = { ticker : '', quantity: 0, avgPrice: 0};
@@ -29,7 +35,56 @@ export class PortfolioBusinessService {
       }),
       catchError( (err) => this.portfolioStateService.error = err),
       finalize( () => this.portfolioStateService.isLoading = false)
-    ).subscribe();
+    ).subscribe( () => this.getRecentPortfolioEvolution());
+  }
+  
+  public getRecentPortfolioEvolution() {
+    const snapshot = this.portfolioStateService.currentSnapshot() ?? [];
+
+    const requestsToMake = snapshot
+      .filter( entry => this.filterForDevPurpose(entry))
+      .map( (entry) => this.getPricesWeightedByQuantity(entry.ticker, entry.quantity) );
+
+    forkJoin(requestsToMake).subscribe( historicalRecords => {
+      let total = new Map<string, number>();
+      
+      historicalRecords.forEach( ( record ) => {
+
+        record.forEach( (price, date) => {
+          const previousPriceAtDate = total.get(date) ?? 0;
+          total.set(date, previousPriceAtDate + price)
+        })
+      })
+
+      const lala = total
+      console.log(lala)
+
+      this.portfolioStateService.recentHistory = lala;
+    })
+  }
+
+
+  /**
+   * Fetches historical prices, and multiplies for the stock quantity.
+   * @param ticker 
+   * @param quantity 
+   * @returns 
+  */
+  private getPricesWeightedByQuantity(ticker: string, quantity: number) {
+    return this.marketStackApiService.getHistoricalPrices(ticker, '3mo')
+      .pipe( map( (record) => {
+        const weightedPrices: [string, number][] = [...record].map( ([date, value]) => [date, value * quantity] )
+
+        if(record.size == 0) console.warn('No values for ticker: ' + ticker);
+
+        return new Map(weightedPrices);
+        })
+      )
+  }
+
+  private filterForDevPurpose(entry: StockEntry) {
+    const ticks = ['PYPL', 'PG']
+    return ticks.includes(entry.ticker) || true;
   }
 
   private getTransactions(): Observable<TransactionItem[]> {

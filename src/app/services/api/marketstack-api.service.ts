@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +9,8 @@ export class MarketstackApiService {
   
   // private readonly MARKETSTACK_KEY = 'c098565631a51d35319761f26cfa8e6d';
   private readonly EOD_ENDPOINT_MOCK = 'assets/mock-response/eod_multiple.json';
-  // private readonly LOCAL_DJANGO = 'http://127.0.0.1:8000?ticker=MSFT&p=1y';
-  private readonly DEV_DJANGO = 'assets/data/price-hist.json';
+   private readonly DEV_DJANGO = (ticker: string, period: string) => `http://localhost:3000/historical-prices?ticker=${ticker}&p=${period}`;
+  //private readonly DEV_DJANGO = 'assets/data/price-hist.json';
   // private readonly EOD_ENDPOINT = `http://api.marketstack.com/v1/eod?access_key=${this.MARKETSTACK_KEY}&limit=1000`;
 
   private readonly PREVIOUS_CLOSE =  (ticker:string) => `https://api.polygon.io/v2/aggs/ticker/${ticker}/prev?adjusted=true&apiKey=_2ipQbmncvN_GASEyzOvHjjbRleJhOL8`;
@@ -18,8 +18,22 @@ export class MarketstackApiService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public getHistoricalPrices() {
-    return this.httpClient.get(this.DEV_DJANGO).pipe( tap( (a) => console.log(a) ))
+  public getHistoricalPrices(ticker: string, period: string) {
+    return this.httpClient.get(this.DEV_DJANGO(ticker, period)).pipe( 
+        map( (response) => {
+          const map = new Map<string, number>();
+          const entries = Object.entries(response);
+
+          entries.forEach( (entry) => {
+              const date = entry[0]
+              const price = entry[1]
+              if( +date > 0 && price > 0 ) map.set(entry[0], entry[1]);
+              else console.error( "Invalid entry: " + JSON.stringify(entry) )
+          })
+
+          return map;
+        }
+      ));
   }
 
   public getEndOfDayHistory(tickers: string[]): Observable<YearHistory> {
@@ -91,7 +105,7 @@ export class MarketstackApiService {
   }
 }
 
-interface Datasets {
+export interface Datasets {
     label: string,
     data: number[],
     fill: boolean,

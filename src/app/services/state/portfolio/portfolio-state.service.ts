@@ -27,6 +27,7 @@ interface State {
   snapshotHistory: PortfolioSnapshot[];
   currentSnapshot?: StockEntry[];
   transactionHistory: TransactionItem[];
+  recentHistory?: Map<string, number>
   error: string;
 }
 
@@ -37,6 +38,7 @@ export class PortfolioStateService {
 
   transactions: TransactionItem[] = [];
   portfolioEvolution: PortfolioSnapshot[] = [];
+  portfolioPriceEvolution: any;
 
   // Store/State
   private portfolioState = signal<State>({
@@ -47,6 +49,7 @@ export class PortfolioStateService {
     snapshotHistory: [],
     transactionHistory: [],
     error: '',
+    recentHistory: undefined
   });
 
   constructor() {}
@@ -77,6 +80,10 @@ export class PortfolioStateService {
     return computed(() => this.portfolioState().error);
   }
 
+  get recentHistory(): Signal<Map<string, number> | undefined> {
+    return computed( () => this.portfolioState().recentHistory)
+  }
+
   // Setters/Reducers - how action updates state
   set isLoading(isLoading: boolean) {
     this.portfolioState.update((state) => ({ ...state, isLoading }));
@@ -84,7 +91,7 @@ export class PortfolioStateService {
 
   set snapshotHistory(snapshotHistory: PortfolioSnapshot[]) {
     const currEntries = this.computeCurrentSnapshot(snapshotHistory.slice(-1)[0]);
-    const totalValue = this.computePortfolioValue(currEntries).total;
+    const totalValue = this.computeCurrentPortfolioValue(currEntries).total;
 
     this.portfolioState.update(
       (state) => ({
@@ -104,6 +111,10 @@ export class PortfolioStateService {
     this.portfolioState.update((state) => ({ ...state, error }));
   }
 
+  set recentHistory(recentHistory: Map<string, number> | undefined) {
+    this.portfolioState.update( (state) => ({...state, recentHistory}) )
+  }
+
   public updatePrice(ticker: string, price: number) {
       const currSnapshot = this.currentSnapshot();
 
@@ -121,9 +132,16 @@ export class PortfolioStateService {
       this.portfolioState.update( (state) => ({
         ...state,
         currentSnapshot: this.sortSnapshotByValue(currSnapshot),
-        currentValue: this.computePortfolioValue(currSnapshot).total
+        currentValue: this.computeCurrentPortfolioValue(currSnapshot).total
       }))
   }
+/* 
+  public getAllSymbols() {
+    const tickerList = this.transactions.map( (tr) => tr.ticker );
+    const uniqueTickers = Array.from(new Set(tickerList));
+    const filtered = uniqueTickers.filter( (tick) => !!tick && !tick.includes('#') );
+    return filtered;
+  } */
 
   private computeCurrentSnapshot(lastState: PortfolioSnapshot): StockEntry[] {
     const entries: StockEntry[] = [];
@@ -153,21 +171,23 @@ export class PortfolioStateService {
   }
 
   private computeProfit(price: number, avgPrice: number) {
-    return (price - avgPrice) / avgPrice;
+      return (price - avgPrice) / avgPrice;
   }
 
-  private computePortfolioValue(entries: StockEntry[]): Totals {
-    return entries.reduce( (accumulator: Totals , entry: StockEntry): Totals => {
-      return { total: accumulator.total + entry.lastPrice * entry.quantity,
-          initial: accumulator.initial + entry.avgPrice * entry.quantity
-      };
-    }, {total: 0, initial: 0} );
+  private computeCurrentPortfolioValue(entries: StockEntry[]): Totals {
+      return entries.reduce( 
+          (accumulator: Totals , entry: StockEntry): Totals => {
+              return { 
+                  total: accumulator.total + entry.lastPrice * entry.quantity,
+                  initial: accumulator.initial + entry.avgPrice * entry.quantity
+              };
+          }, {total: 0, initial: 0} );
   }
 
   private getPriceAtDate(ticker: string, date: string): number {
     const mockMap = new Map<string, number>();
 
-    mockMap.set("ALTR.LS", 0);
+    mockMap.set("ALTR.LS", 4.90);
     mockMap.set("PLTR", 26);
     mockMap.set("GVOLT", 0);
     mockMap.set("PG", 147);
