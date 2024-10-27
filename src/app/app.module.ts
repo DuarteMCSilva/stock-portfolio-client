@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
@@ -20,10 +20,12 @@ import { CalculatorComponent } from './pages/portfolio/calculator/calculator.com
 import { HistoryComponent } from './pages/portfolio/history/history.component';
 import { PieChartComponent } from './pages/portfolio/pie-chart/pie-chart.component';
 import { TableComponent } from './components';
+import { FinancialsComponent } from './pages/financials/financials.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'portfolio', component: PortfolioComponent },
+  { path: 'financials', component: FinancialsComponent },
   { path: '**', component: HomeComponent }
 ]
 
@@ -38,7 +40,8 @@ const routes: Routes = [
     PortfolioComponent,
     CalculatorComponent,
     HistoryComponent,
-    PieChartComponent
+    PieChartComponent,
+    FinancialsComponent
   ],
   imports: [
     BrowserModule,
@@ -49,6 +52,7 @@ const routes: Routes = [
     ButtonModule,
     ChipModule,
     ChartModule,
+    FormsModule,
     RouterModule.forRoot(routes),
     TableComponent
   ],

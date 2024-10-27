@@ -1,0 +1,23 @@
+<h1> Financials </h1>
+
+<div class="search-container">
+    <input type="text" [(ngModel)]="searchInput" class="search-input" placeholder="Search...">
+    <button class="search-button" (click)="onSearch()">Search</button>
+</div>
+<div class="results-container" >
+    <ng-container *ngIf="!(isLoading$ | async); else loading">
+        <h2> {{ results.ticker }}</h2>
+        <app-table
+          style="max-width: 500px;"
+          [data]="{ rows: results.momentum, columns }"
+        >
+        </app-table>
+    </ng-container>
+</div>
+
+<ng-template #valueWithPercentage let-entry="entry">
+</ng-template>
+
+<ng-template #loading>
+    <p> Loading Ticker... </p>
+</ng-template>
