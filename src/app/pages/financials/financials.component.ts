@@ -68,7 +68,7 @@ export class FinancialsComponent implements OnInit {
 
   public onSearch() {
     const url = this.ENDPOINT;
-    url.searchParams.append('ticker', this.searchInput);
+    url.searchParams.set('ticker', this.searchInput);
 
     this.isLoadingSubject.next(true);
     this.httpClient.get<Stock>( url.href ).pipe(
