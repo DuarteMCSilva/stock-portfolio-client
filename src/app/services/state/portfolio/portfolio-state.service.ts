@@ -203,7 +203,6 @@ export class PortfolioStateService {
     mockMap.set("NNN", 45.98);
     mockMap.set("TGT", 147.02);
     mockMap.set("BABA", 77.92);
-    console.log(date);
     
     return mockMap.get(ticker) ?? 1;
   }

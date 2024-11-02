@@ -51,7 +51,6 @@ export class MarketstackApiService {
 
   public getPreviousClose(ticker: string) {
     const endpoint = this.PREVIOUS_CLOSE(ticker);
-    console.log(endpoint);
     return this.httpClient.get(endpoint).pipe( map( (response: any) => response.results[0].c ));
   }
 

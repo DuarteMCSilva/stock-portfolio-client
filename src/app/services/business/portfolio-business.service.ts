@@ -30,8 +30,6 @@ export class PortfolioBusinessService {
       map((transactions) => this.computePortfolioState(transactions)),
       tap((snapshots) => {
         this.portfolioStateService.snapshotHistory = snapshots;
-        console.warn("Persisted snapshots:" );
-        console.log(snapshots);
       }),
       catchError( (err) => this.portfolioStateService.error = err),
       finalize( () => this.portfolioStateService.isLoading = false)
@@ -57,7 +55,6 @@ export class PortfolioBusinessService {
       })
 
       const lala = total
-      console.log(lala)
 
       this.portfolioStateService.recentHistory = lala;
     })

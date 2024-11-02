@@ -71,7 +71,6 @@ export class PortfolioComponent implements OnInit {
     this.marketStackApi.getEndOfDayHistory(['AAPL','PYPL'])
       .subscribe( (response) => {
         this.stockPriceHistoryData = response;
-        debugger;
       });
     this.fetchPortfolioSnapshotHistory();
 
@@ -83,7 +82,6 @@ export class PortfolioComponent implements OnInit {
           { label: 'Portfolio', data: Array.from(hist?.values() ?? []), fill: false} as Datasets
         ]
       } as YearHistory
-      debugger
       return  ret;
     })
   }

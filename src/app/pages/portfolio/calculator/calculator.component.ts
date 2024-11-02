@@ -23,8 +23,8 @@ export class CalculatorComponent implements OnInit {
   totalProjCashFlow = 0;
 
   constructor(private evaluationsApi: EvaluationsApiService) {
-    this.evaluationsApi.postEvaluation().subscribe( (d) => console.log(d));
-    this.evaluationsApi.getEvaluations().subscribe( (d) => console.log(d));
+    this.evaluationsApi.postEvaluation().subscribe( (d) => console.log(''));
+    this.evaluationsApi.getEvaluations().subscribe( (d) => console.log(''));
     this.intrinsicValueSubject = new BehaviorSubject<number>(0);
     this.intrinsicValue$ = this.intrinsicValueSubject.asObservable();
     this.formGroup = new FormGroup(
@@ -123,7 +123,7 @@ export class CalculatorComponent implements OnInit {
       comment: formValues.commentary
     }
     const simulation = JSON.stringify(simul);
-    console.log(simulation)
+    //console.log(simulation)
     return simulation;
   }
 

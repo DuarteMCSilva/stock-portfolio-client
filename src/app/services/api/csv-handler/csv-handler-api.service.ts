@@ -42,8 +42,7 @@ export class CsvHandlerApiService {
   public fetchTransactions(){
     const url = 'assets/data/Transactions.csv';
     return this.httpClient.get(url, {responseType: 'text'}).pipe( 
-      map( (csv) => this.parseTransactionsCsv(csv) ),
-      tap( (a) => console.log(a))
+      map( (csv) => this.parseTransactionsCsv(csv) )
     );
   }
 
