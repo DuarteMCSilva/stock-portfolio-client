@@ -21,6 +21,9 @@ import { HistoryComponent } from './pages/portfolio/history/history.component';
 import { PieChartComponent } from './pages/portfolio/pie-chart/pie-chart.component';
 import { TableComponent } from './components';
 import { FinancialsComponent } from './pages/financials/financials.component';
+import { CustomCurrencyPipe } from './pipes/custom-currency.pipe';
+import { CurrencyPipe } from '@angular/common';
+import { NumberFormatPipe } from './pipes/number-format.pipe';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -41,7 +44,9 @@ const routes: Routes = [
     CalculatorComponent,
     HistoryComponent,
     PieChartComponent,
-    FinancialsComponent
+    FinancialsComponent,
+    CustomCurrencyPipe,
+    NumberFormatPipe
   ],
   imports: [
     BrowserModule,
@@ -56,7 +61,9 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     TableComponent
   ],
-  providers: [],
+  providers: [
+    CurrencyPipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
