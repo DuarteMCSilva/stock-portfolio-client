@@ -11,6 +11,7 @@ export class EvaluationsBusinessService {
   private initialFcf: number;
   private debt: number;
   private cash: number;
+  private ratio?: number;
 
   constructor() {
      this.growthRates = [0.02, 0.05, 0.02];
@@ -19,10 +20,23 @@ export class EvaluationsBusinessService {
      this.initialFcf = 1;
      this.debt = 1;
      this.cash = 1;
+     this.ratio = undefined;
   }
 
-  computeIntrinsicValue(method: string = 'DFCF'){
+  computeIntrinsicValue(data: any, method: string = 'DFCF'){
+    this.setEvaluationState(data);
+
     return this.cash - this.debt + this.computeProjectedCashFlows(); 
+  }
+
+  setEvaluationState(data: any) {
+    this.growthRates = data.growthRates;
+    this.discountFactor = data.discountFactor;
+    this.initialRevenue = data.initialRevenue;
+    this.initialFcf = data.initialFcf;
+    this.debt = data.debt;
+    this.cash = data.cash;
+    this.ratio = data.ratio;
   }
 
   computeProjectedCashFlows() {
@@ -35,10 +49,10 @@ export class EvaluationsBusinessService {
     return propagatedFCF.map( (fcf, index) => fcf*this.getDiscountFactorOnYear(index+1) )
   }
 
-  getPropagatedFCF(ratio?: number) {
+  getPropagatedFCF() {
     const revenueExpectation = this.getPropagatedRevenue();
 
-    const fcfRatio = ratio ?? this.initialFcf/this.initialRevenue;
+    const fcfRatio = this.ratio ?? this.initialFcf/this.initialRevenue;
 
     return revenueExpectation.map( (revenue) => revenue*fcfRatio );
   }

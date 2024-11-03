@@ -82,8 +82,9 @@ describe('EvaluationsBusinessService', () => {
     spyOn(service, 'getPropagatedRevenue').and.returnValue([150, 200, 250]);
     service['initialRevenue'] = 100;
     service['initialFcf'] = 50;
+    service['ratio'] = 0.25;
 
-    const fcfExpectation = service.getPropagatedFCF(0.25);
+    const fcfExpectation = service.getPropagatedFCF();
 
     const expected = [37.5, 50, 62.5];
 
@@ -117,10 +118,12 @@ describe('EvaluationsBusinessService', () => {
   it('#intrinsicValue: should ', () => {
     spyOn(service, 'getDiscountedFCF').and.returnValue([90, 81, 72.9, 65.61]);
 
-    service['debt'] = 60;
-    service['cash'] = 30;
+    const data = {
+      debt: 60,
+      cash: 30
+    }
 
-    const intrinsicValue = service.computeIntrinsicValue();
+    const intrinsicValue = service.computeIntrinsicValue(data);
 
     expect(intrinsicValue).toBeCloseTo(279.51);
   });

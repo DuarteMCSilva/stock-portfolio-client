@@ -48,7 +48,7 @@ export class CsvHandlerApiService {
 
   public parseTransactionsCsv(data: string): TransactionInfo[] {
 
-      const tableLines = data.split('\n');//= csvParse.parse(data, { columns: true } );
+      const tableLines = data.split('\n');
       const columnNames = tableLines[0].split(',');
       const columnIndexes = this.getIndexesOfRelevantColumns(columnNames);
 

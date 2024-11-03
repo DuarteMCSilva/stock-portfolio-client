@@ -28,3 +28,13 @@
 .search-button:hover {
   background-color: #45a049;
 }
+  .financials-wrapper {
+    display: flex;
+    gap: 50px;
+    margin-bottom: 50px;
+  }
+
+  .estimations-wrapper {
+    display: flex;
+    justify-content: center;
+  }
