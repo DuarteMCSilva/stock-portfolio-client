@@ -15,9 +15,6 @@ export class ValueFormatterPipe implements PipeTransform {
   ){}
 
   transform(value: string | number, options: any = {}): unknown {
-
-    debugger;
-
     const isNumber = typeof value === 'number';
     const isString =  typeof value === 'string';
     const isStringOrNumber = isNumber || isString;
@@ -44,19 +41,44 @@ export class ValueFormatterPipe implements PipeTransform {
 
 
   private numberFormat(value: number, options: any) {
-    let transformedValue: number | string = value;
+    const normalizedValues = this.normalizeOrderOfMagnitude(value);
+    let transformedValue: number | string = normalizedValues?.value;
+
+    transformedValue = normalizedValues.value;
 
     const numberFormat = options.decimalFormat ?? this.defaultDecimal;
     if(options.percentage){
       transformedValue = this.percentPipe.transform(transformedValue, numberFormat) ?? transformedValue;
       return transformedValue
     }
-    transformedValue = this.decimalPipe.transform(transformedValue, numberFormat) ?? transformedValue;
+
+    const decimalFormatted = this.decimalPipe.transform(transformedValue, numberFormat) ?? '' + transformedValue;
+    transformedValue = decimalFormatted.replace(/\,/g, "");
 
     if(options.currency) {
       transformedValue = this.currencyPipe.transform(transformedValue) ?? transformedValue;
     }
-    return transformedValue;
+    return transformedValue + ' ' + normalizedValues.symbol;
+  }
+
+  private normalizeOrderOfMagnitude(value: number) {
+    debugger
+    
+    if(value > 1000000000) {
+      const normalized = value/1000000000;
+      return { symbol: 'b', value: normalized }
+    }
+    
+    if(value > 1000000) {
+      const normalized = value/1000000;
+      return { symbol: 'M', value: normalized }
+    }
+
+    if(value > 1000) {
+      const normalized = value/1000;
+      return { symbol: 'k', value: normalized }
+    }
+    return {symbol: '', value: value};
   }
 
 }

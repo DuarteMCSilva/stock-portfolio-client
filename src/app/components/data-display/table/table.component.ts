@@ -15,7 +15,9 @@ interface TableColumn {
 
 interface ColumnOptions {
   decimalPlaces?: number,
-  percentage?: boolean
+  percentage?: boolean,
+  currency?: boolean,
+  options?: ColumnOptions
 }
 
 
@@ -30,34 +32,13 @@ export class TableComponent implements OnChanges {
 
   
   @Input() data: TableData = {
-    columns: [{label: 'code'}, {label: 'name'}, {label: 'age'}, {label: 'sex'}, {label: 'eyesColor'} ],
-    rows: [
-      {
-        code: '1',
-        name: 'Duarte',
-        age: 28,
-        sex: 'M',
-        eyeColor: 'olive'
-      },
-      {
-        code: '2',
-        name: 'Joana',
-        age: 24,
-        sex: 'F',
-        eyeColor: 'hazelnut'
-      },
-      {
-        code: '3',
-        name: 'Ekki',
-        age: 6,
-        sex: 'M',
-        eyeColor: 'green'
-      }
-    ]
+    columns: [],
+    rows: []
   };
 
   ngOnChanges() {
-    if(!this.data.columns && this.data.rows.length){
+    const data = this.data;
+    if(!data.columns && data.rows.length){
       const firstRow = this.data.rows[0];
       this.data.columns = Object.keys(firstRow);
     }
