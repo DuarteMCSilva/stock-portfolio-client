@@ -1,4 +1,4 @@
-import { DecimalPipe, PercentPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe, PercentPipe } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
@@ -10,7 +10,8 @@ export class ValueFormatterPipe implements PipeTransform {
 
   constructor(
     private percentPipe: PercentPipe,
-    private decimalPipe: DecimalPipe
+    private decimalPipe: DecimalPipe,
+    private currencyPipe: CurrencyPipe
   ){}
 
   transform(value: string | number, options: any = {}): unknown {
@@ -48,8 +49,12 @@ export class ValueFormatterPipe implements PipeTransform {
     const numberFormat = options.decimalFormat ?? this.defaultDecimal;
     if(options.percentage){
       transformedValue = this.percentPipe.transform(transformedValue, numberFormat) ?? transformedValue;
-    } else{
-      transformedValue = this.decimalPipe.transform(transformedValue, numberFormat) ?? transformedValue;
+      return transformedValue
+    }
+    transformedValue = this.decimalPipe.transform(transformedValue, numberFormat) ?? transformedValue;
+
+    if(options.currency) {
+      transformedValue = this.currencyPipe.transform(transformedValue) ?? transformedValue;
     }
     return transformedValue;
   }

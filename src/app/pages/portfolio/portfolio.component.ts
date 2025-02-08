@@ -17,10 +17,10 @@ export class PortfolioComponent implements OnInit {
   public columns = [
     {label: 'ticker'},
     {label: 'quantity', options: { decimalFormat: '1.0-0'}},
-    {label: 'avgPrice'},
-    {label: 'totalPrice'},
-    {label: 'lastPrice'},
-    {label: 'marketValue'},
+    {label: 'avgPrice', options: { currency: true }},
+    {label: 'totalPrice', options: { currency: true }},
+    {label: 'lastPrice', options: { currency: true }},
+    {label: 'marketValue', options: { currency: true }},
     {label: 'profit', options: { percentage: true }}
   ]
 

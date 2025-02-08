@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DecimalPipe, PercentPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DecimalPipe, PercentPipe } from '@angular/common';
 import { SharedPipesModule } from './pipes/component-pipes.module';
 
 @NgModule({
@@ -7,7 +7,8 @@ import { SharedPipesModule } from './pipes/component-pipes.module';
   ],
   providers: [
     PercentPipe,
-    DecimalPipe
+    DecimalPipe,
+    CurrencyPipe
   ],
   imports: [
     CommonModule,
