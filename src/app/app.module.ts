@@ -19,6 +19,7 @@ import { PortfolioComponent } from './pages/portfolio/portfolio.component';
 import { CalculatorComponent } from './pages/portfolio/calculator/calculator.component';
 import { HistoryComponent } from './pages/portfolio/history/history.component';
 import { PieChartComponent } from './pages/portfolio/pie-chart/pie-chart.component';
+import { TableComponent } from './components';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -49,6 +50,7 @@ const routes: Routes = [
     ChipModule,
     ChartModule,
     RouterModule.forRoot(routes),
+    TableComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
