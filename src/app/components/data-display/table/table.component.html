@@ -9,7 +9,7 @@
     <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr>
             <td *ngFor="let col of columns">
-                {{ rowData[(col.label || col)] ?? 'n.a.' }}
+                {{ (rowData[(col.label || col)]) | valueFormatter: col.options }}
             </td>
         </tr>
     </ng-template>

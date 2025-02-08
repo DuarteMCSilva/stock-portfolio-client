@@ -1,19 +1,21 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { ComponentsSharedModule } from '../../components-shared.module';
 
 interface TableData {
-  columns: string[] | TableColumn[],
-  rows: TableRow[]
-}
-
-interface TableRow {
-  [param: string]: number | string
+  columns?: string[] | TableColumn[],
+  rows: any[]
 }
 
 interface TableColumn {
   label: string,
-  name?: string
+  name?: string,
+  options?: ColumnOptions
+}
+
+interface ColumnOptions {
+  decimalPlaces?: number,
+  percentage?: boolean
 }
 
 
@@ -24,7 +26,7 @@ interface TableColumn {
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss'
 })
-export class TableComponent {
+export class TableComponent implements OnChanges {
 
   
   @Input() data: TableData = {
@@ -53,4 +55,11 @@ export class TableComponent {
       }
     ]
   };
+
+  ngOnChanges() {
+    if(!this.data.columns && this.data.rows.length){
+      const firstRow = this.data.rows[0];
+      this.data.columns = Object.keys(firstRow);
+    }
+  }
 }

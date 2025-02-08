@@ -14,6 +14,15 @@ export class PortfolioComponent implements OnInit {
 
   public entries$: Signal<StockEntry[] | undefined>;
   public total$: Signal<number>;
+  public columns = [
+    {label: 'ticker'},
+    {label: 'quantity', options: { decimalFormat: '1.0-0'}},
+    {label: 'avgPrice'},
+    {label: 'totalPrice'},
+    {label: 'lastPrice'},
+    {label: 'marketValue'},
+    {label: 'profit', options: { percentage: true }}
+  ]
 
   public entries: StockEntry[] = [
     { ticker: 'BABA', name: 'Alibaba', sector: 'ECommerce', quantity: 10, lastPrice: 72.82, avgPrice: 148.90 },

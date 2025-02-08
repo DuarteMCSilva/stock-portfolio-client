@@ -1,13 +1,21 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe, PercentPipe } from '@angular/common';
+import { SharedPipesModule } from './pipes/component-pipes.module';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+  ],
+  providers: [
+    PercentPipe,
+    DecimalPipe
+  ],
   imports: [
-    CommonModule
+    CommonModule,
+    SharedPipesModule
   ],
   exports: [
-    CommonModule
+    CommonModule,
+    SharedPipesModule
   ]
 })
 export class ComponentsSharedModule { }

@@ -1,4 +1,10 @@
 <h1> Portfolio Overview </h1>
+
+<app-table
+    style="max-width: 1000px"
+    *ngIf="entries$() as entries"    
+    [data]="{ rows: entries, columns }">
+</app-table>
 <div class="grid">
     <div class="col-12 lg:col-12 xl:col-6">
         <div class="card mb-0">
@@ -93,6 +99,8 @@
         </tr>
     </tfoot>
 </table>
+
+
 <div class="flex align-items-center">
     <p-chip label="Apple" icon="pi pi-apple" styleClass="mr-2"></p-chip>
     <p-chip label="Facebook" icon="pi pi-facebook" styleClass="mr-2"></p-chip>
