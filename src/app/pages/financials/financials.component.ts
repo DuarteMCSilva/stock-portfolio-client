@@ -11,8 +11,8 @@ interface StationaryMetrics {
 }
 
 interface ValueChange {
-  value: number,
-  change: number
+  value?: number,
+  change?: number
 }
 
 interface MomentumFinancials {

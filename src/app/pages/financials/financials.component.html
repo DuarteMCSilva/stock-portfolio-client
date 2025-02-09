@@ -44,18 +44,18 @@
                 <tr>
                   <td colspan="5"> Financials by year </td>
                 </tr>
-                <tr *ngFor="let columnName of columns; index as index">
-                  <ng-container *ngIf="columnName !== 'period'">
+                <tr *ngFor="let column of columns; index as index">
+                  <ng-container *ngIf="column.label !== 'period'">
                     <td> 
-                      {{ columnName }}
+                      {{ column }}
                     </td>
                     <td *ngFor="let financials of results.momentum">
-                        {{ financials[columnName].value | currency }} {{ "(" + (financials[columnName].change | percent) + ")" }}
+                        {{ financials[column.label].value | currency }} {{ "(" + (financials[column.label].change | percent) + ")" }}
                     </td>
                   </ng-container>
-                  <ng-container *ngIf="columnName === 'period'">
+                  <ng-container *ngIf="column.label === 'period'">
                     <td> 
-                      {{ columnName }}
+                      {{ column }}
                     </td>
                     <td *ngFor="let financials of results.momentum; index as i">
                         {{ 2023 - 3 + i }}
@@ -65,7 +65,6 @@
               </tbody>
             </table>
       </div>
-    </ng-container>
     <div class="estimations-wrapper">
       <form [formGroup]="estimationsForm" (ngSubmit)="onSubmit()">
         <table border="1">

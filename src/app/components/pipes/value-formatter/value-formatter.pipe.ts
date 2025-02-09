@@ -19,8 +19,6 @@ export class ValueFormatterPipe implements PipeTransform {
     const isString =  typeof value === 'string';
     const isStringOrNumber = isNumber || isString;
 
-    debugger
-
     if(!value){
       return 'n.a'
     }
@@ -64,19 +62,18 @@ export class ValueFormatterPipe implements PipeTransform {
   }
 
   private normalizeOrderOfMagnitude(value: number) {
-    debugger
-    
-    if(value > 1000000000) {
+    const absValue = Math.abs(value);
+    if(absValue > 1000000000) {
       const normalized = value/1000000000;
       return { symbol: 'b', value: normalized }
     }
     
-    if(value > 1000000) {
+    if(absValue > 1000000) {
       const normalized = value/1000000;
       return { symbol: 'M', value: normalized }
     }
 
-    if(value > 1000) {
+    if(absValue > 1000) {
       const normalized = value/1000;
       return { symbol: 'k', value: normalized }
     }
