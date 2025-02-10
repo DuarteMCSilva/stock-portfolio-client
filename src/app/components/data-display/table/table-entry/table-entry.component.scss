@@ -1,0 +1,19 @@
+.composite {
+    display: flex;
+    justify-content: center;
+
+    .wrapper {
+        width: 100%;
+        display: flex;
+    }
+
+    .value {
+        flex: 0 1 70%;
+    }
+
+    .change {
+        flex: 0 1 30%;
+        font-size: x-small;
+        align-self: center;
+    }
+}

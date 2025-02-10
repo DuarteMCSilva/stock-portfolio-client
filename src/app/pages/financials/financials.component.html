@@ -1,93 +1,64 @@
 <h1> Financials </h1>
 
 <div class="search-container">
-    <input type="text" [(ngModel)]="searchInput" class="search-input" placeholder="Search...">
-    <button class="search-button" (click)="onSearch()">Search</button>
+  <input type="text" [(ngModel)]="searchInput" class="search-input" placeholder="Search...">
+  <button class="search-button" (click)="onSearch()">Search</button>
 </div>
-<div class="results-container" >
-    <ng-container *ngIf="!(isLoading$ | async); else loading">
-        <h2> {{ results.ticker }}</h2>
-        <app-table
-          style="max-width: 500px;"
-          [data]="{ rows: results.momentum, columns }"
-        >
-        </app-table>
-    </ng-container>
-        <h2> {{ results.ticker }}</h2>
-        <div class="financials-wrapper">
-          <table>
-              <tbody>
-                <tr>
-                  <td>{{ 'Market cap' }}</td>
-                  <td>{{ results.marketCap | currency }}</td>
-                </tr>
-                <tr>
-                  <td>{{ 'Number of shares' }}</td>
-                  <td>{{ results.shares | numberFormat }}</td>
-                </tr>
-                <tr>
-                  <td>{{ 'Beta' }}</td>
-                  <td>{{ results.beta }}</td>
-                </tr>
-                <tr>
-                  <td>{{ 'Cash' }}</td>
-                  <td>{{ results.state.cash | numberFormat }}</td>
-                </tr>
-                <tr>
-                  <td>{{ 'Debt' }}</td>
-                  <td>{{ results.state.debt | numberFormat }}</td>
-                </tr>
-              </tbody>
-          </table>        
-          <table>
-              <tbody>
-                <tr>
-                  <td colspan="5"> Financials by year </td>
-                </tr>
-                <tr *ngFor="let column of columns; index as index">
-                  <ng-container *ngIf="column.label !== 'period'">
-                    <td> 
-                      {{ column }}
-                    </td>
-                    <td *ngFor="let financials of results.momentum">
-                        {{ financials[column.label].value | currency }} {{ "(" + (financials[column.label].change | percent) + ")" }}
-                    </td>
-                  </ng-container>
-                  <ng-container *ngIf="column.label === 'period'">
-                    <td> 
-                      {{ column }}
-                    </td>
-                    <td *ngFor="let financials of results.momentum; index as i">
-                        {{ 2023 - 3 + i }}
-                    </td>
-                  </ng-container>
-                </tr>
-              </tbody>
-            </table>
-      </div>
-    <div class="estimations-wrapper">
-      <form [formGroup]="estimationsForm" (ngSubmit)="onSubmit()">
-        <table border="1">
-          <thead>
-            <tr>
-                <td  colspan="3">Revenue growth expectations</td>
-            </tr>
-            <tr>
-              <th> 1-5 years</th>
-              <th> 6-10 years</th>
-              <th> 11-20 years</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><input id="growth5" type="number" formControlName="growth5"/></td>
-              <td><input id="growth10" type="number" formControlName="growth10"/></td>
-              <td><input id="growth20" type="number" formControlName="growth20"/></td>
-            </tr>
-          </tbody>
+<div class="results-container">
+  <ng-container *ngIf="!(isLoading$ | async); else loading">
+    <h2> {{ results.ticker }}</h2>
+    <div class="financials-wrapper">
+      <table>
+        <tbody>
+          <tr>
+            <td>{{ 'Market cap' }}</td>
+            <td>{{ results.marketCap | currency }}</td>
+          </tr>
+          <tr>
+            <td>{{ 'Number of shares' }}</td>
+            <td>{{ results.shares | numberFormat }}</td>
+          </tr>
+          <tr>
+            <td>{{ 'Beta' }}</td>
+            <td>{{ results.beta }}</td>
+          </tr>
+          <tr>
+            <td>{{ 'Cash' }}</td>
+            <td>{{ results.state.cash | numberFormat }}</td>
+          </tr>
+          <tr>
+            <td>{{ 'Debt' }}</td>
+            <td>{{ results.state.debt | numberFormat }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <app-table style="max-width: 500px;" [data]="{ rows: results.momentum, columns }">
+    </app-table>
+  </ng-container>
+  <div class="estimations-wrapper">
+    <form [formGroup]="estimationsForm" (ngSubmit)="onSubmit()">
+      <table border="1">
+        <thead>
+          <tr>
+            <td colspan="3">Revenue growth expectations</td>
+          </tr>
+          <tr>
+            <th> 1-5 years</th>
+            <th> 6-10 years</th>
+            <th> 11-20 years</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input id="growth5" type="number" formControlName="growth5" /></td>
+            <td><input id="growth10" type="number" formControlName="growth10" /></td>
+            <td><input id="growth20" type="number" formControlName="growth20" /></td>
+          </tr>
+        </tbody>
       </table>
 
-      <input type="submit"/>
+      <input type="submit" />
     </form>
   </div>
 </div>
@@ -96,5 +67,5 @@
 </ng-template>
 
 <ng-template #loading>
-    <p> Loading Ticker... </p>
+  <p> Loading Ticker... </p>
 </ng-template>

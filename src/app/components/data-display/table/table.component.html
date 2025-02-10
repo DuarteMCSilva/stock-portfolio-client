@@ -4,7 +4,7 @@
     >
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns">
+            <th *ngFor="let col of columns" class="column-name">
                 {{ (col.name || col.label || col) }}
             </th>
         </tr>
@@ -12,25 +12,11 @@
     <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr>
             <td *ngFor="let col of columns">
-                <ng-container
-                    [ngTemplateOutlet]="col.options?.composite ? composite: simple"
-                    [ngTemplateOutletContext]="{ data: rowData[col.label || col], opts: col.options }"
-                    >
-                </ng-container>
+                <app-table-entry
+                    [opts]="col.options"
+                    [entry]="rowData[col.label || col]">
+                </app-table-entry>
             </td>
         </tr>
     </ng-template>
 </p-table>
-
-<ng-template #simple let-data="data" let-opts="opts">
-    <span *ngIf="!opts?.composite">
-        {{ data | valueFormatter: opts }}
-    </span>
-</ng-template>
-
-<ng-template #composite let-data="data" let-opts="opts">
-    <div style="display: flex;">
-        <div style="width: 80%;"> {{ data.value | valueFormatter: opts }} </div>
-        <div style="width: 20%; background-color: gainsboro;"> {{ data.change | valueFormatter: { percentage: true } }}</div>
-    </div>
-</ng-template>

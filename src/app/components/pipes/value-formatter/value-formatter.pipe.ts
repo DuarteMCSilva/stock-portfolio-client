@@ -20,7 +20,7 @@ export class ValueFormatterPipe implements PipeTransform {
     const isStringOrNumber = isNumber || isString;
 
     if(!value){
-      return 'n.a'
+      return '-'
     }
 
     if(!isStringOrNumber) {

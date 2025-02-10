@@ -1,0 +1,10 @@
+<span *ngIf="entryType() === entryTypes.Simple">
+    {{ entry | valueFormatter: opts }}
+</span>
+
+<div *ngIf="entryType() === entryTypes.Composite" class="composite" style="display: flex;">
+    <div class="wrapper">
+        <span class="value"> {{ entry.value | valueFormatter: opts }} </span>
+        <span class="change"> {{'(' + (entry.change - 1 | valueFormatter: { percentage: true }) + ')' }} </span>
+    </div>
+</div>

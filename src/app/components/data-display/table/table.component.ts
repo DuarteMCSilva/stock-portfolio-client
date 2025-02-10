@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { ComponentsSharedModule } from '../../components-shared.module';
+import { TableEntryComponent } from './table-entry/table-entry.component';
 
 interface TableData {
   columns?: string[] | TableColumn[],
@@ -20,11 +21,10 @@ interface ColumnOptions {
   options?: ColumnOptions
 }
 
-
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [ComponentsSharedModule, TableModule],
+  imports: [ComponentsSharedModule, TableModule, TableEntryComponent],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss'
 })
